@@ -1,4 +1,5 @@
 <style>
+    /* VERSION 2.0 - Tab switching fixed - Clear browser cache if seeing errors */
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
     
     /* Hide default ERPNext header */
@@ -12,7 +13,6 @@
         box-sizing: border-box;
     }
     
-    /* Unified Color System - Light Mode (Default) */
     :root {
         --primary-color: #084887;
         --primary-dark: #063a6b;
@@ -28,7 +28,6 @@
         --warning-color: #f59e0b;
     }
     
-    /* Dark Mode */
     [data-theme="dark"] {
         --primary-color: #0d6efd;
         --primary-dark: #084887;
@@ -39,9 +38,6 @@
         --bg-secondary: #334155;
         --bg-tertiary: #475569;
         --border-color: rgba(148, 163, 184, 0.3);
-        --success-color: #10b981;
-        --error-color: #ef4444;
-        --warning-color: #f59e0b;
     }
     
     body {
@@ -50,7 +46,6 @@
         min-height: 100vh;
         padding: 0;
         padding-top: 0 !important;
-        transition: background 0.3s ease;
     }
     
     body.rtl {
@@ -66,10 +61,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
     .header-left {
@@ -98,10 +90,21 @@
         color: var(--primary-color);
     }
     
+    .page-title-section {
+        display: flex;
+        flex-direction: column;
+    }
+    
     .page-title {
-        font-size: 18px;
+        font-size: 20px;
         color: var(--text-primary);
-        font-weight: 600;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    
+    .page-subtitle {
+        font-size: 12px;
+        color: var(--text-secondary);
     }
     
     .header-right {
@@ -120,7 +123,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s;
         font-size: 16px;
         color: var(--text-primary);
     }
@@ -156,63 +159,33 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
-    /* Main Container - Behance Style */
+    /* Main Container */
     .profile-container {
         max-width: 1400px;
-        margin: 0 auto;
-        padding: 24px;
+        margin: 24px auto;
+        padding: 0 24px;
         display: grid;
-        grid-template-columns: 300px 1fr;
+        grid-template-columns: 320px 1fr;
         gap: 24px;
-        align-items: start;
-        min-height: calc(100vh - 80px);
-        max-height: calc(100vh - 80px);
+        min-height: calc(100vh - 120px);
     }
     
-    /* Left Sidebar - Profile Card */
+    /* Left Sidebar */
     .profile-card {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        background: var(--bg-primary);
         border-radius: 16px;
-        padding: 20px;
+        padding: 24px;
         border: 1px solid var(--border-color);
-        box-shadow: 0 8px 24px rgba(8, 72, 135, 0.12), 0 0 0 1px rgba(8, 72, 135, 0.05);
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        position: relative;
-    }
-    
-    .profile-card::-webkit-scrollbar {
-        width: 4px;
-    }
-    
-    .profile-card::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    .profile-card::-webkit-scrollbar-thumb {
-        background: var(--border-color);
-        border-radius: 2px;
-    }
-    
-    .profile-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
-    }
-    
-    [data-theme="dark"] .profile-card {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(13, 110, 253, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        height: fit-content;
+        position: sticky;
+        top: 24px;
     }
     
     .profile-image-wrapper {
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 16px;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
         position: relative;
     }
     
@@ -236,58 +209,51 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 48px;
+        font-size: 52px;
         color: white;
         font-weight: 700;
-        box-shadow: 0 4px 16px rgba(8, 72, 135, 0.25);
-    }
-    
-    [data-theme="dark"] .profile-image {
-        box-shadow: 0 4px 16px rgba(13, 110, 253, 0.4);
+        box-shadow: 0 8px 24px rgba(8, 72, 135, 0.3);
     }
     
     .profile-name {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         color: var(--text-primary);
         text-align: center;
-        margin-bottom: 6px;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        margin-bottom: 8px;
         line-height: 1.3;
     }
     
-    [data-theme="dark"] .profile-name {
-        color: var(--text-primary);
-        -webkit-text-fill-color: var(--text-primary);
-    }
-    
     .profile-designation {
-        font-size: 12px;
+        font-size: 13px;
         color: var(--text-secondary);
         text-align: center;
-        margin-bottom: 16px;
-        padding: 4px 12px;
+        margin-bottom: 24px;
+        padding: 6px 16px;
         background: var(--bg-secondary);
-        border-radius: 16px;
+        border-radius: 20px;
         display: inline-block;
         border: 1px solid var(--border-color);
+    }
+    
+    .profile-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, var(--border-color) 50%, transparent 100%);
+        margin: 24px 0;
     }
     
     .profile-info {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
     
     .info-item {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
+        gap: 12px;
         font-size: 13px;
-        padding: 10px;
+        padding: 12px;
         border-radius: 8px;
         transition: all 0.2s;
         background: transparent;
@@ -295,30 +261,20 @@
     
     .info-item:hover {
         background: var(--bg-secondary);
-        transform: translateX(4px);
-    }
-    
-    body.rtl .info-item:hover {
-        transform: translateX(-4px);
     }
     
     .info-item i {
         color: white;
         font-size: 12px;
-        margin-top: 2px;
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
+        border-radius: 8px;
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        box-shadow: 0 2px 6px rgba(8, 72, 135, 0.2);
-    }
-    
-    [data-theme="dark"] .info-item i {
-        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+        box-shadow: 0 4px 12px rgba(8, 72, 135, 0.25);
     }
     
     .info-item-content {
@@ -337,12 +293,7 @@
     .info-value {
         color: var(--text-primary);
         font-weight: 500;
-    }
-    
-    .profile-divider {
-        height: 2px;
-        background: linear-gradient(90deg, transparent 0%, var(--border-color) 50%, transparent 100%);
-        margin: 24px 0;
+        word-break: break-word;
     }
     
     /* Right Side - Main Content */
@@ -350,50 +301,40 @@
         background: var(--bg-primary);
         border-radius: 16px;
         border: 1px solid var(--border-color);
-        box-shadow: 0 8px 24px rgba(8, 72, 135, 0.12), 0 0 0 1px rgba(8, 72, 135, 0.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         overflow: hidden;
-        height: 100%;
         display: flex;
         flex-direction: column;
-    }
-    
-    [data-theme="dark"] .main-content {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(13, 110, 253, 0.2);
     }
     
     /* Tabs Navigation */
     .tabs-nav {
         display: flex;
         border-bottom: 2px solid var(--border-color);
-        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+        background: var(--bg-secondary);
         overflow-x: auto;
         padding: 8px 8px 0 8px;
     }
     
     .tab-button {
-        padding: 12px 20px;
+        padding: 14px 24px;
         background: transparent;
         border: none;
         border-bottom: 3px solid transparent;
         color: var(--text-secondary);
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         white-space: nowrap;
         font-family: inherit;
         border-radius: 8px 8px 0 0;
-        position: relative;
         margin-right: 4px;
     }
     
     .tab-button:hover {
         color: var(--primary-color);
         background: rgba(8, 72, 135, 0.05);
-    }
-    
-    [data-theme="dark"] .tab-button:hover {
-        background: rgba(13, 110, 253, 0.1);
     }
     
     .tab-button.active {
@@ -410,29 +351,14 @@
     /* Tab Content */
     .tab-content {
         display: none;
-        padding: 20px;
+        padding: 32px;
         animation: fadeIn 0.3s ease;
         flex: 1;
         overflow-y: auto;
-        overflow-x: hidden;
     }
     
     .tab-content.active {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .tab-content::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .tab-content::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    .tab-content::-webkit-scrollbar-thumb {
-        background: var(--border-color);
-        border-radius: 3px;
+        display: block;
     }
     
     @keyframes fadeIn {
@@ -440,117 +366,20 @@
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 12px;
-        margin-bottom: 20px;
-    }
-    
-    .stat-card {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        border-radius: 12px;
-        padding: 16px;
-        border: 1px solid var(--border-color);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
-    
-    .stat-card:hover::before {
-        transform: scaleX(1);
-    }
-    
-    .stat-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(8, 72, 135, 0.15);
-    }
-    
-    [data-theme="dark"] .stat-card:hover {
-        box-shadow: 0 8px 24px rgba(13, 110, 253, 0.25);
-    }
-    
-    .stat-label {
-        font-size: 10px;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .stat-label::before {
-        content: '';
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: var(--primary-color);
-    }
-    
-    .stat-value {
-        font-size: 24px;
-        font-weight: 700;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 2px;
-        line-height: 1.2;
-    }
-    
-    [data-theme="dark"] .stat-value {
-        color: var(--primary-color);
-        -webkit-text-fill-color: var(--primary-color);
-    }
-    
-    .stat-sublabel {
-        font-size: 12px;
-        color: var(--text-secondary);
-        margin-top: 4px;
-    }
-    
     /* Info Grid */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 16px;
+        margin-bottom: 20px;
     }
     
     .info-card {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        background: var(--bg-secondary);
         border-radius: 12px;
-        padding: 16px;
+        padding: 20px;
         border: 1px solid var(--border-color);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .info-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+        transition: all 0.3s;
     }
     
     .info-card:hover {
@@ -559,50 +388,36 @@
         border-color: var(--primary-color);
     }
     
-    [data-theme="dark"] .info-card:hover {
-        box-shadow: 0 8px 20px rgba(13, 110, 253, 0.2);
-    }
-    
     .info-card-title {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
         color: var(--text-primary);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding-bottom: 10px;
+        gap: 10px;
+        padding-bottom: 12px;
         border-bottom: 2px solid var(--border-color);
     }
     
     .info-card-title i {
         color: white;
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
+        border-radius: 8px;
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        box-shadow: 0 2px 6px rgba(8, 72, 135, 0.2);
-        font-size: 12px;
-    }
-    
-    [data-theme="dark"] .info-card-title i {
-        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+        box-shadow: 0 4px 12px rgba(8, 72, 135, 0.25);
+        font-size: 14px;
     }
     
     .info-row {
         display: flex;
         justify-content: space-between;
-        padding: 10px 8px;
+        padding: 12px 0;
         border-bottom: 1px solid var(--border-color);
-        transition: all 0.2s;
-        border-radius: 6px;
-    }
-    
-    .info-row:hover {
-        background: var(--bg-tertiary);
     }
     
     .info-row:last-child {
@@ -622,26 +437,64 @@
         text-align: right;
     }
     
-    /* Loan Card */
-    .loan-card {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        border-radius: 12px;
-        padding: 16px;
-        border: 1px solid var(--border-color);
-        margin-bottom: 12px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+    /* Document Cards */
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
     }
     
-    .loan-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    .document-card {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 20px;
+        border: 2px solid var(--border-color);
+        transition: all 0.3s;
+        cursor: pointer;
+        text-align: center;
+    }
+    
+    .document-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(8, 72, 135, 0.2);
+    }
+    
+    .document-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 16px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 28px;
+        box-shadow: 0 8px 16px rgba(8, 72, 135, 0.3);
+    }
+    
+    .document-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+    
+    .document-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+    
+    /* Loan Card */
+    .loan-card {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 16px;
+        transition: all 0.3s;
     }
     
     .loan-card:hover {
@@ -650,34 +503,19 @@
         border-color: var(--primary-color);
     }
     
-    [data-theme="dark"] .loan-card:hover {
-        box-shadow: 0 8px 24px rgba(13, 110, 253, 0.25);
-    }
-    
     .loan-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
-        padding-bottom: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
         border-bottom: 2px solid var(--border-color);
     }
     
     .loan-type {
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 700;
         color: var(--text-primary);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .loan-type::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--primary-color);
     }
     
     .loan-status {
@@ -686,65 +524,40 @@
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
     .loan-status.disbursed {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.25) 100%);
+        background: rgba(16, 185, 129, 0.15);
         color: var(--success-color);
         border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    
-    .loan-status.paid {
-        background: linear-gradient(135deg, rgba(8, 72, 135, 0.15) 0%, rgba(8, 72, 135, 0.25) 100%);
-        color: var(--primary-color);
-        border: 1px solid rgba(8, 72, 135, 0.3);
     }
     
     .loan-details {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        gap: 12px;
     }
     
     .loan-detail-item {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding: 10px;
         background: var(--bg-tertiary);
+        padding: 12px;
         border-radius: 8px;
         border: 1px solid var(--border-color);
-        transition: all 0.2s;
-    }
-    
-    .loan-detail-item:hover {
-        background: var(--bg-secondary);
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
     }
     
     .loan-detail-label {
-        font-size: 10px;
+        font-size: 11px;
         color: var(--text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
+        margin-bottom: 6px;
     }
     
     .loan-detail-value {
         font-size: 16px;
         font-weight: 700;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    [data-theme="dark"] .loan-detail-value {
         color: var(--primary-color);
-        -webkit-text-fill-color: var(--primary-color);
     }
     
     /* Loading State */
@@ -759,15 +572,9 @@
         height: 50px;
         border: 4px solid var(--border-color);
         border-top-color: var(--primary-color);
-        border-right-color: var(--primary-light);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
         margin: 0 auto 20px;
-        box-shadow: 0 4px 12px rgba(8, 72, 135, 0.2);
-    }
-    
-    [data-theme="dark"] .loading-spinner {
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
     }
     
     @keyframes spin {
@@ -788,6 +595,29 @@
         color: var(--primary-color);
     }
     
+    /* Download Button */
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(8, 72, 135, 0.3);
+    }
+    
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(8, 72, 135, 0.4);
+    }
+    
     /* Responsive */
     @media (max-width: 968px) {
         .profile-container {
@@ -802,7 +632,7 @@
             grid-template-columns: 1fr;
         }
         
-        .loan-details {
+        .documents-grid {
             grid-template-columns: 1fr;
         }
     }
@@ -816,14 +646,20 @@
             <span data-lang="en">Back</span>
             <span data-lang="ar">رجوع</span>
         </a>
-        <h1 class="page-title">
-            <span data-lang="en">My Profile</span>
-            <span data-lang="ar">ملفي الشخصي</span>
-        </h1>
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <span data-lang="en">Employee Profile</span>
+                <span data-lang="ar">ملف الموظف</span>
+            </h1>
+            <p class="page-subtitle">
+                <span data-lang="en">View your personal information and documents</span>
+                <span data-lang="ar">عرض معلوماتك الشخصية والمستندات</span>
+            </p>
+        </div>
     </div>
     
     <div class="header-right">
-        <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+        <button class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon" id="themeIcon"></i>
         </button>
         <div class="lang-switcher">
@@ -843,7 +679,11 @@
             </div>
         </div>
         <h2 class="profile-name" id="profileName">Loading...</h2>
-        <p class="profile-designation" id="profileDesignation">Loading...</p>
+        <div style="text-align: center;">
+            <span class="profile-designation" id="profileDesignation">Loading...</span>
+        </div>
+        
+        <div class="profile-divider"></div>
         
         <div class="profile-info">
             <div class="info-item">
@@ -852,6 +692,15 @@
                     <div class="info-label" data-lang="en">Employee ID</div>
                     <div class="info-label" data-lang="ar">رقم الموظف</div>
                     <div class="info-value" id="employeeId">-</div>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <i class="fas fa-building"></i>
+                <div class="info-item-content">
+                    <div class="info-label" data-lang="en">Department</div>
+                    <div class="info-label" data-lang="ar">القسم</div>
+                    <div class="info-value" id="employeeDepartment">-</div>
                 </div>
             </div>
             
@@ -868,35 +717,17 @@
                 <i class="fas fa-envelope"></i>
                 <div class="info-item-content">
                     <div class="info-label" data-lang="en">Email</div>
-                    <div class="info-label" data-lang="ar">البريد الإلكتروني</div>
+                    <div class="info-label" data-lang="ar">البريد</div>
                     <div class="info-value" id="employeeEmail">-</div>
-                </div>
-            </div>
-            
-            <div class="info-item">
-                <i class="fas fa-passport"></i>
-                <div class="info-item-content">
-                    <div class="info-label" data-lang="en">Iqama / National ID</div>
-                    <div class="info-label" data-lang="ar">الإقامة / الهوية الوطنية</div>
-                    <div class="info-value" id="employeeIqama">-</div>
                 </div>
             </div>
             
             <div class="info-item">
                 <i class="fas fa-calendar"></i>
                 <div class="info-item-content">
-                    <div class="info-label" data-lang="en">Date of Joining</div>
+                    <div class="info-label" data-lang="en">Joining Date</div>
                     <div class="info-label" data-lang="ar">تاريخ الانضمام</div>
                     <div class="info-value" id="employeeJoiningDate">-</div>
-                </div>
-            </div>
-            
-            <div class="info-item">
-                <i class="fas fa-building"></i>
-                <div class="info-item-content">
-                    <div class="info-label" data-lang="en">Department</div>
-                    <div class="info-label" data-lang="ar">القسم</div>
-                    <div class="info-value" id="employeeDepartment">-</div>
                 </div>
             </div>
         </div>
@@ -906,111 +737,124 @@
     <div class="main-content">
         <!-- Tabs Navigation -->
         <div class="tabs-nav">
-            <button class="tab-button active" onclick="switchTab('overview')">
-                <i class="fas fa-chart-line"></i>
-                <span data-lang="en"> Overview</span>
-                <span data-lang="ar"> نظرة عامة</span>
+            <button class="tab-button active" onclick="switchTab('details', this)">
+                <i class="fas fa-user-circle"></i>
+                <span data-lang="en">Employee Details</span>
+                <span data-lang="ar">تفاصيل الموظف</span>
             </button>
-            <button class="tab-button" onclick="switchTab('requests')">
-                <i class="fas fa-file-alt"></i>
-                <span data-lang="en"> Requests</span>
-                <span data-lang="ar"> الطلبات</span>
+            <button class="tab-button" onclick="switchTab('documents', this)">
+                <i class="fas fa-folder-open"></i>
+                <span data-lang="en">Employee Documents</span>
+                <span data-lang="ar">مستندات الموظف</span>
             </button>
-            <button class="tab-button" onclick="switchTab('vacation')">
-                <i class="fas fa-calendar-check"></i>
-                <span data-lang="en"> Vacation Balance</span>
-                <span data-lang="ar"> رصيد الإجازات</span>
-            </button>
-            <button class="tab-button" onclick="switchTab('loans')">
+            <button class="tab-button" onclick="switchTab('loans', this)">
                 <i class="fas fa-hand-holding-usd"></i>
-                <span data-lang="en"> Loans & Advances</span>
-                <span data-lang="ar"> القروض والسلف</span>
+                <span data-lang="en">Loans & Advances</span>
+                <span data-lang="ar">القروض والسلف</span>
             </button>
-            <button class="tab-button" onclick="switchTab('employment')">
-                <i class="fas fa-briefcase"></i>
-                <span data-lang="en"> Employment Details</span>
-                <span data-lang="ar"> تفاصيل التوظيف</span>
+            <button class="tab-button" onclick="switchTab('change-password', this)">
+                <i class="fas fa-key"></i>
+                <span data-lang="en">Change Password</span>
+                <span data-lang="ar">تغيير كلمة المرور</span>
             </button>
         </div>
         
         <!-- Tab Contents -->
-        <!-- Overview Tab -->
-        <div class="tab-content active" id="overviewTab">
-            <div class="loading" id="overviewLoading">
+        
+        <!-- Employee Details Tab -->
+        <div class="tab-content active" id="detailsTab">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
+                <span data-lang="en">Personal & Employment Information</span>
+                <span data-lang="ar">المعلومات الشخصية والوظيفية</span>
+            </h3>
+            <div class="info-grid" id="detailsGrid"></div>
+        </div>
+        
+        <!-- Employee Documents Tab -->
+        <div class="tab-content" id="documentsTab">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
+                <span data-lang="en">My Documents & Attachments</span>
+                <span data-lang="ar">مستنداتي ومرفقاتي</span>
+            </h3>
+            <div class="loading" id="documentsLoading">
                 <div class="loading-spinner"></div>
-                <p data-lang="en">Loading overview...</p>
-                <p data-lang="ar">جاري تحميل النظرة العامة...</p>
+                <p data-lang="en">Loading documents...</p>
+                <p data-lang="ar">جاري تحميل المستندات...</p>
             </div>
-            <div id="overviewContent" style="display: none;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">
-                    <span data-lang="en">Quick Stats</span>
-                    <span data-lang="ar">إحصائيات سريعة</span>
-                </h3>
-                <div class="stats-grid" id="statsGrid"></div>
+            <div id="documentsContent" style="display: none;">
+                <div class="documents-grid" id="documentsGrid"></div>
             </div>
         </div>
         
-        <!-- Requests Tab -->
-        <div class="tab-content" id="requestsTab">
-            <div class="loading" id="requestsLoading">
-                <div class="loading-spinner"></div>
-                <p data-lang="en">Loading requests...</p>
-                <p data-lang="ar">جاري تحميل الطلبات...</p>
-            </div>
-            <div id="requestsContent" style="display: none;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">
-                    <span data-lang="en">My Requests</span>
-                    <span data-lang="ar">طلباتي</span>
-                </h3>
-                <div class="stats-grid" id="requestsStatsGrid"></div>
-            </div>
-        </div>
-        
-        <!-- Vacation Balance Tab -->
-        <div class="tab-content" id="vacationTab">
-            <div class="loading" id="vacationLoading">
-                <div class="loading-spinner"></div>
-                <p data-lang="en">Loading vacation balance...</p>
-                <p data-lang="ar">جاري تحميل رصيد الإجازات...</p>
-            </div>
-            <div id="vacationContent" style="display: none;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">
-                    <span data-lang="en">Vacation Balance</span>
-                    <span data-lang="ar">رصيد الإجازات</span>
-                </h3>
-                <div class="info-grid" id="vacationGrid"></div>
-            </div>
-        </div>
-        
-        <!-- Loans Tab -->
+        <!-- Loans & Advances Tab -->
         <div class="tab-content" id="loansTab">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
+                <span data-lang="en">Active Loans & Advances</span>
+                <span data-lang="ar">القروض والسلف النشطة</span>
+            </h3>
             <div class="loading" id="loansLoading">
                 <div class="loading-spinner"></div>
                 <p data-lang="en">Loading loans...</p>
                 <p data-lang="ar">جاري تحميل القروض...</p>
             </div>
             <div id="loansContent" style="display: none;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">
-                    <span data-lang="en">Active Loans & Advances</span>
-                    <span data-lang="ar">القروض والسلف النشطة</span>
-                </h3>
-                <div id="loansList" style="max-height: calc(100vh - 400px); overflow-y: auto;"></div>
+                <div id="loansList"></div>
             </div>
         </div>
         
-        <!-- Employment Details Tab -->
-        <div class="tab-content" id="employmentTab">
-            <div class="loading" id="employmentLoading">
-                <div class="loading-spinner"></div>
-                <p data-lang="en">Loading employment details...</p>
-                <p data-lang="ar">جاري تحميل تفاصيل التوظيف...</p>
-            </div>
-            <div id="employmentContent" style="display: none;">
-                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">
-                    <span data-lang="en">Employment Information</span>
-                    <span data-lang="ar">معلومات التوظيف</span>
-                </h3>
-                <div class="info-grid" id="employmentGrid"></div>
+        <!-- Change Password Tab -->
+        <div class="tab-content" id="change-passwordTab">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">
+                <span data-lang="en">Change Your Password</span>
+                <span data-lang="ar">تغيير كلمة المرور</span>
+            </h3>
+            
+            <div style="max-width: 500px; margin: 0 auto;">
+                <div class="info-card">
+                    <div class="info-card-title">
+                        <i class="fas fa-lock"></i>
+                        <span data-lang="en">Update Password</span>
+                        <span data-lang="ar">تحديث كلمة المرور</span>
+                    </div>
+                    
+                    <div style="padding: 10px 0;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                <span data-lang="en">Old Password</span>
+                                <span data-lang="ar">كلمة المرور القديمة</span>
+                            </label>
+                            <input type="password" id="oldPassword" placeholder="Enter old password" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                <span data-lang="en">New Password</span>
+                                <span data-lang="ar">كلمة المرور الجديدة</span>
+                            </label>
+                            <input type="password" id="newPassword" placeholder="Enter new password" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-secondary); color: var(--text-primary);">
+                            <small style="display: block; margin-top: 6px; font-size: 11px; color: var(--text-secondary);">
+                                <span data-lang="en">Password must be at least 6 characters</span>
+                                <span data-lang="ar">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل</span>
+                            </small>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                                <span data-lang="en">Confirm New Password</span>
+                                <span data-lang="ar">تأكيد كلمة المرور الجديدة</span>
+                            </label>
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                        
+                        <div id="passwordMessage" style="display: none; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; font-weight: 500;"></div>
+                        
+                        <button onclick="changePassword()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(8, 72, 135, 0.3);">
+                            <i class="fas fa-save" style="margin-right: 8px;"></i>
+                            <span data-lang="en">Update Password</span>
+                            <span data-lang="ar">تحديث كلمة المرور</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1029,11 +873,7 @@
     updateThemeIcon(savedTheme);
     
     function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            themeIcon.className = 'fas fa-sun';
-        } else {
-            themeIcon.className = 'fas fa-moon';
-        }
+        themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
     
     if (themeToggle) {
@@ -1058,40 +898,71 @@ function switchLanguage(lang) {
     localStorage.setItem('employeePortalLang', lang);
     
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.closest('.lang-btn').classList.add('active');
+    event.target.classList.add('active');
     
-    if (lang === 'ar') {
-        document.body.classList.add('rtl');
-    } else {
-        document.body.classList.remove('rtl');
-    }
-    
+    document.body.classList.toggle('rtl', lang === 'ar');
     applyLanguage(lang);
 }
 
 function applyLanguage(lang) {
     document.querySelectorAll('[data-lang="en"]').forEach(el => {
-        el.style.display = lang === 'en' ? 'block' : 'none';
+        el.style.display = lang === 'en' ? '' : 'none';
     });
     document.querySelectorAll('[data-lang="ar"]').forEach(el => {
-        el.style.display = lang === 'ar' ? 'block' : 'none';
+        el.style.display = lang === 'ar' ? '' : 'none';
     });
 }
 
+// VERSION: 2.0 - Fixed all tab switching issues
 // Tab Switching
-function switchTab(tabName) {
-    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
-    event.target.closest('.tab-button').classList.add('active');
-    document.getElementById(tabName + 'Tab').classList.add('active');
-    
-    // Load tab data if not loaded
-    if (tabName === 'overview') loadOverview();
-    if (tabName === 'requests') loadRequests();
-    if (tabName === 'vacation') loadVacation();
-    if (tabName === 'loans') loadLoans();
-    if (tabName === 'employment') loadEmployment();
+function switchTab(tabName, buttonElement) {
+    try {
+        console.log('switchTab called with:', tabName, 'buttonElement:', buttonElement);
+        
+        // Remove active class from all buttons and contents
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            if (btn && btn.classList) {
+                btn.classList.remove('active');
+            }
+        });
+        
+        document.querySelectorAll('.tab-content').forEach(content => {
+            if (content && content.classList) {
+                content.classList.remove('active');
+            }
+        });
+        
+        // Add active class to clicked button
+        if (buttonElement && buttonElement.classList) {
+            buttonElement.classList.add('active');
+        }
+        
+        // Show the selected tab content
+        const tabContent = document.getElementById(tabName + 'Tab');
+        if (tabContent && tabContent.classList) {
+            tabContent.classList.add('active');
+        }
+        
+        console.log('Successfully switched to tab:', tabName);
+        
+        // Load tab data if not loaded
+        if (tabName === 'documents') {
+            if (!window.documentsLoaded) {
+                console.log('Loading documents...');
+                loadDocuments();
+                window.documentsLoaded = true;
+            }
+        } else if (tabName === 'loans') {
+            if (!window.loansLoaded) {
+                console.log('Loading loans...');
+                loadLoans();
+                window.loansLoaded = true;
+            }
+        }
+        // No data loading needed for change-password tab
+    } catch (error) {
+        console.error('Error in switchTab:', error);
+    }
 }
 
 // Check Authentication
@@ -1105,9 +976,6 @@ function checkAuthentication() {
             } else {
                 window.location.href = '/employee-login';
             }
-        },
-        error: function() {
-            window.location.href = '/employee-login';
         }
     });
 }
@@ -1131,6 +999,8 @@ function loadEmployeeData() {
 }
 
 function fetchFullEmployeeDetails(employeeName) {
+    console.log('Fetching full employee details for:', employeeName);
+    
     frappe.call({
         method: 'frappe.client.get',
         args: {
@@ -1140,19 +1010,25 @@ function fetchFullEmployeeDetails(employeeName) {
         callback: function(r) {
             if (r.message) {
                 employeeData = r.message;
+                console.log('Employee data loaded:', employeeData);
+                console.log('Employee number set to:', employeeNo);
                 populateProfileCard();
-                loadOverview();
+                populateEmployeeDetails();
+            } else {
+                console.error('No employee data returned');
             }
+        },
+        error: function(err) {
+            console.error('Error fetching employee details:', err);
         }
     });
 }
 
 function populateProfileCard() {
-    const name = employeeData.employee_name || employeeData.first_name || 'N/A';
+    const name = employeeData.employee_name || 'N/A';
     const designation = employeeData.designation || 'N/A';
-    const mobile = employeeData.mobile_no || employeeData.mobile || '-';
-    const email = employeeData.company_email || employeeData.prefered_contact_email || employeeData.personal_email || '-';
-    const iqama = employeeData.iqama_national_id || employeeData.border_no || '-';
+    const mobile = employeeData.cell_number || employeeData.mobile_no || '-';
+    const email = employeeData.company_email || employeeData.personal_email || '-';
     const joiningDate = employeeData.date_of_joining || '-';
     const department = employeeData.department || 'N/A';
     
@@ -1168,314 +1044,53 @@ function populateProfileCard() {
     document.getElementById('profileName').textContent = name;
     document.getElementById('profileDesignation').textContent = designation;
     document.getElementById('employeeId').textContent = employeeData.name || '-';
+    document.getElementById('employeeDepartment').textContent = department;
     document.getElementById('employeeMobile').textContent = mobile;
     document.getElementById('employeeEmail').textContent = email;
-    document.getElementById('employeeIqama').textContent = iqama;
     document.getElementById('employeeJoiningDate').textContent = joiningDate;
-    document.getElementById('employeeDepartment').textContent = department;
 }
 
-// Load Overview
-function loadOverview() {
-    if (!employeeNo) return;
-    
-    // Load requests count
-    frappe.call({
-        method: 'frappe.client.get_list',
-        args: {
-            doctype: 'Request For Payment',
-            filters: {
-                'items.employee_no': employeeNo
-            },
-            fields: ['name', 'workflow_state'],
-            limit_page_length: 9999
-        },
-        callback: function(r) {
-            const requests = r.message || [];
-            const totalRequests = requests.length;
-            const completed = requests.filter(r => r.workflow_state === 'Approved by FM').length;
-            const pending = requests.filter(r => r.workflow_state === 'Draft').length;
-            const inProgress = requests.filter(r => r.workflow_state === 'Approved by HR MGR').length;
-            
-            // Load loans
-            frappe.call({
-                method: 'frappe.client.get_list',
-                args: {
-                    doctype: 'Loan',
-                    filters: {
-                        applicant: employeeNo,
-                        status: 'Disbursed'
-                    },
-                    fields: ['loan_amount', 'total_amount_paid', 'total_payment']
-                },
-                callback: function(loanR) {
-                    const loans = loanR.message || [];
-                    const totalLoans = loans.length;
-                    const totalLoanAmount = loans.reduce((sum, loan) => sum + (parseFloat(loan.loan_amount) || 0), 0);
-                    const paidAmount = loans.reduce((sum, loan) => sum + (parseFloat(loan.total_amount_paid) || 0), 0);
-                    const pendingAmount = totalLoanAmount - paidAmount;
-                    
-                    // Calculate years of service
-                    const joiningDate = employeeData.date_of_joining;
-                    let yearsOfService = '-';
-                    if (joiningDate) {
-                        const joining = new Date(joiningDate);
-                        const now = new Date();
-                        const years = now.getFullYear() - joining.getFullYear();
-                        const months = now.getMonth() - joining.getMonth();
-                        yearsOfService = years > 0 ? `${years} ${years === 1 ? 'Year' : 'Years'}` : `${months} ${months === 1 ? 'Month' : 'Months'}`;
-                    }
-                    
-                    displayOverview(totalRequests, completed, pending, inProgress, totalLoans, pendingAmount, yearsOfService);
-                }
-            });
-        }
-    });
-}
-
-function displayOverview(totalRequests, completed, pending, inProgress, totalLoans, pendingLoanAmount, yearsOfService) {
-    const grid = document.getElementById('statsGrid');
-    grid.innerHTML = `
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">Total Requests</div>
-            <div class="stat-label" data-lang="ar">إجمالي الطلبات</div>
-            <div class="stat-value">${totalRequests}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">Completed</div>
-            <div class="stat-label" data-lang="ar">مكتمل</div>
-            <div class="stat-value">${completed}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">Pending</div>
-            <div class="stat-label" data-lang="ar">قيد الانتظار</div>
-            <div class="stat-value">${pending}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">In Progress</div>
-            <div class="stat-label" data-lang="ar">قيد التنفيذ</div>
-            <div class="stat-value">${inProgress}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">Active Loans</div>
-            <div class="stat-label" data-lang="ar">القروض النشطة</div>
-            <div class="stat-value">${totalLoans}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label" data-lang="en">Years of Service</div>
-            <div class="stat-label" data-lang="ar">سنوات الخدمة</div>
-            <div class="stat-value">${yearsOfService}</div>
-        </div>
-    `;
-    
-    document.getElementById('overviewLoading').style.display = 'none';
-    document.getElementById('overviewContent').style.display = 'block';
-    applyLanguage(currentLang);
-}
-
-// Load Requests
-function loadRequests() {
-    if (!employeeNo) return;
-    
-    frappe.call({
-        method: 'frappe.client.get_list',
-        args: {
-            doctype: 'Request For Payment',
-            filters: {
-                'items.employee_no': employeeNo
-            },
-            fields: ['name', 'workflow_state', 'expense_type', 'date', 'total_amount'],
-            limit_page_length: 9999
-        },
-        callback: function(r) {
-            const requests = r.message || [];
-            const totalRequests = requests.length;
-            const completed = requests.filter(r => r.workflow_state === 'Approved by FM').length;
-            const pending = requests.filter(r => r.workflow_state === 'Draft').length;
-            const inProgress = requests.filter(r => r.workflow_state === 'Approved by HR MGR').length;
-            const totalAmount = requests.reduce((sum, r) => sum + (parseFloat(r.total_amount) || 0), 0);
-            
-            const grid = document.getElementById('requestsStatsGrid');
-            grid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-label" data-lang="en">Total Requests</div>
-                    <div class="stat-label" data-lang="ar">إجمالي الطلبات</div>
-                    <div class="stat-value">${totalRequests}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label" data-lang="en">Completed</div>
-                    <div class="stat-label" data-lang="ar">مكتمل</div>
-                    <div class="stat-value">${completed}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label" data-lang="en">Pending</div>
-                    <div class="stat-label" data-lang="ar">قيد الانتظار</div>
-                    <div class="stat-value">${pending}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label" data-lang="en">In Progress</div>
-                    <div class="stat-label" data-lang="ar">قيد التنفيذ</div>
-                    <div class="stat-value">${inProgress}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label" data-lang="en">Total Amount</div>
-                    <div class="stat-label" data-lang="ar">المبلغ الإجمالي</div>
-                    <div class="stat-value">${totalAmount.toFixed(2)}</div>
-                    <div class="stat-sublabel">SAR</div>
-                </div>
-            `;
-            
-            document.getElementById('requestsLoading').style.display = 'none';
-            document.getElementById('requestsContent').style.display = 'block';
-            applyLanguage(currentLang);
-        }
-    });
-}
-
-// Load Vacation Balance
-function loadVacation() {
-    if (!employeeData) return;
-    
-    // Calculate vacation balance (simplified - you can enhance this based on your leave application logic)
-    const leaveBalance = employeeData.leave_balance || 0;
-    const totalVacation = 30; // This should be calculated based on years of service
-    const usedVacation = totalVacation - leaveBalance;
-    
-    const grid = document.getElementById('vacationGrid');
+function populateEmployeeDetails() {
+    const grid = document.getElementById('detailsGrid');
     grid.innerHTML = `
         <div class="info-card">
             <div class="info-card-title">
-                <i class="fas fa-calendar-alt"></i>
-                <span data-lang="en">Vacation Summary</span>
-                <span data-lang="ar">ملخص الإجازات</span>
+                <i class="fas fa-id-card-alt"></i>
+                <span data-lang="en">Personal Information</span>
+                <span data-lang="ar">المعلومات الشخصية</span>
             </div>
             <div class="info-row">
-                <span class="info-row-label" data-lang="en">Total Vacation Days</span>
-                <span class="info-row-label" data-lang="ar">إجمالي أيام الإجازة</span>
-                <span class="info-row-value">${totalVacation}</span>
+                <span class="info-row-label" data-lang="en">Full Name</span>
+                <span class="info-row-label" data-lang="ar">الاسم الكامل</span>
+                <span class="info-row-value">${employeeData.employee_name || '-'}</span>
             </div>
             <div class="info-row">
-                <span class="info-row-label" data-lang="en">Used Days</span>
-                <span class="info-row-label" data-lang="ar">الأيام المستخدمة</span>
-                <span class="info-row-value">${usedVacation}</span>
+                <span class="info-row-label" data-lang="en">Iqama / National ID</span>
+                <span class="info-row-label" data-lang="ar">الإقامة</span>
+                <span class="info-row-value">${employeeData.iqama_national_id || '-'}</span>
             </div>
             <div class="info-row">
-                <span class="info-row-label" data-lang="en">Remaining Balance</span>
-                <span class="info-row-label" data-lang="ar">الرصيد المتبقي</span>
-                <span class="info-row-value" style="color: var(--success-color); font-weight: 700;">${leaveBalance}</span>
+                <span class="info-row-label" data-lang="en">Passport No</span>
+                <span class="info-row-label" data-lang="ar">رقم الجواز</span>
+                <span class="info-row-value">${employeeData.passport_number || '-'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Nationality</span>
+                <span class="info-row-label" data-lang="ar">الجنسية</span>
+                <span class="info-row-value">${employeeData.nationality || '-'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Gender</span>
+                <span class="info-row-label" data-lang="ar">الجنس</span>
+                <span class="info-row-value">${employeeData.gender || '-'}</span>
             </div>
         </div>
-        <div class="info-card">
-            <div class="info-card-title">
-                <i class="fas fa-info-circle"></i>
-                <span data-lang="en">Vacation Details</span>
-                <span data-lang="ar">تفاصيل الإجازات</span>
-            </div>
-            <div class="info-row">
-                <span class="info-row-label" data-lang="en">Last Vacation</span>
-                <span class="info-row-label" data-lang="ar">آخر إجازة</span>
-                <span class="info-row-value">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-row-label" data-lang="en">Next Vacation</span>
-                <span class="info-row-label" data-lang="ar">الإجازة القادمة</span>
-                <span class="info-row-value">-</span>
-            </div>
-        </div>
-    `;
-    
-    document.getElementById('vacationLoading').style.display = 'none';
-    document.getElementById('vacationContent').style.display = 'block';
-    applyLanguage(currentLang);
-}
-
-// Load Loans
-function loadLoans() {
-    if (!employeeNo) return;
-    
-    frappe.call({
-        method: 'frappe.client.get_list',
-        args: {
-            doctype: 'Loan',
-            filters: {
-                applicant: employeeNo,
-                status: ['in', ['Disbursed', 'Loan Closure Requested']]
-            },
-            fields: ['name', 'loan_type', 'loan_amount', 'total_payment', 'total_amount_paid', 'monthly_repayment_amount', 'repayment_start_date', 'status', 'custom_request_for_payment'],
-            limit_page_length: 9999
-        },
-        callback: function(r) {
-            const loans = r.message || [];
-            const container = document.getElementById('loansList');
-            
-            if (loans.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        <p data-lang="en" style="font-size: 16px; font-weight: 600; margin-top: 16px;">No active loans or advances</p>
-                        <p data-lang="ar" style="font-size: 16px; font-weight: 600; margin-top: 16px;">لا توجد قروض أو سلف نشطة</p>
-                        <p data-lang="en" style="font-size: 13px; margin-top: 8px; opacity: 0.7;">You don't have any active loans or advances at the moment</p>
-                        <p data-lang="ar" style="font-size: 13px; margin-top: 8px; opacity: 0.7;">ليس لديك أي قروض أو سلف نشطة في الوقت الحالي</p>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = loans.map(loan => {
-                    const pendingAmount = (parseFloat(loan.total_payment) || 0) - (parseFloat(loan.total_amount_paid) || 0);
-                    const statusClass = loan.status === 'Disbursed' ? 'disbursed' : 'paid';
-                    const statusText = loan.status === 'Disbursed' ? 'Active' : 'Paid';
-                    
-                    return `
-                        <div class="loan-card">
-                            <div class="loan-header">
-                                <div class="loan-type">${loan.loan_type || 'N/A'}</div>
-                                <div class="loan-status ${statusClass}">${statusText}</div>
-                            </div>
-                            <div class="loan-details">
-                                <div class="loan-detail-item">
-                                    <div class="loan-detail-label" data-lang="en">Loan Amount</div>
-                                    <div class="loan-detail-label" data-lang="ar">مبلغ القرض</div>
-                                    <div class="loan-detail-value">${parseFloat(loan.loan_amount || 0).toFixed(2)} SAR</div>
-                                </div>
-                                <div class="loan-detail-item">
-                                    <div class="loan-detail-label" data-lang="en">Monthly Payment</div>
-                                    <div class="loan-detail-label" data-lang="ar">الدفع الشهري</div>
-                                    <div class="loan-detail-value">${parseFloat(loan.monthly_repayment_amount || 0).toFixed(2)} SAR</div>
-                                </div>
-                                <div class="loan-detail-item">
-                                    <div class="loan-detail-label" data-lang="en">Pending Amount</div>
-                                    <div class="loan-detail-label" data-lang="ar">المبلغ المعلق</div>
-                                    <div class="loan-detail-value" style="color: ${pendingAmount > 0 ? 'var(--warning-color)' : 'var(--success-color)'};">${pendingAmount.toFixed(2)} SAR</div>
-                                </div>
-                            </div>
-                            ${loan.custom_request_for_payment ? `<div style="margin-top: 12px; font-size: 12px; color: var(--text-secondary);">RFP: ${loan.custom_request_for_payment}</div>` : ''}
-                        </div>
-                    `;
-                }).join('');
-            }
-            
-            document.getElementById('loansLoading').style.display = 'none';
-            document.getElementById('loansContent').style.display = 'block';
-            applyLanguage(currentLang);
-        }
-    });
-}
-
-// Load Employment Details
-function loadEmployment() {
-    if (!employeeData) return;
-    
-    const grid = document.getElementById('employmentGrid');
-    grid.innerHTML = `
+        
         <div class="info-card">
             <div class="info-card-title">
                 <i class="fas fa-briefcase"></i>
-                <span data-lang="en">Employment Information</span>
-                <span data-lang="ar">معلومات التوظيف</span>
-            </div>
-            <div class="info-row">
-                <span class="info-row-label" data-lang="en">Employment Type</span>
-                <span class="info-row-label" data-lang="ar">نوع التوظيف</span>
-                <span class="info-row-value">${employeeData.employment_type || '-'}</span>
+                <span data-lang="en">Employment Details</span>
+                <span data-lang="ar">تفاصيل التوظيف</span>
             </div>
             <div class="info-row">
                 <span class="info-row-label" data-lang="en">Designation</span>
@@ -1483,16 +1098,27 @@ function loadEmployment() {
                 <span class="info-row-value">${employeeData.designation || '-'}</span>
             </div>
             <div class="info-row">
-                <span class="info-row-label" data-lang="en">Company</span>
-                <span class="info-row-label" data-lang="ar">الشركة</span>
-                <span class="info-row-value">${employeeData.company || '-'}</span>
+                <span class="info-row-label" data-lang="en">Department</span>
+                <span class="info-row-label" data-lang="ar">القسم</span>
+                <span class="info-row-value">${employeeData.department || '-'}</span>
             </div>
             <div class="info-row">
                 <span class="info-row-label" data-lang="en">Project</span>
                 <span class="info-row-label" data-lang="ar">المشروع</span>
                 <span class="info-row-value">${employeeData.project_name || employeeData.project || '-'}</span>
             </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Joining Date</span>
+                <span class="info-row-label" data-lang="ar">تاريخ الانضمام</span>
+                <span class="info-row-value">${employeeData.date_of_joining || '-'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Company</span>
+                <span class="info-row-label" data-lang="ar">الشركة</span>
+                <span class="info-row-value">${employeeData.company || '-'}</span>
+            </div>
         </div>
+        
         <div class="info-card">
             <div class="info-card-title">
                 <i class="fas fa-money-bill-wave"></i>
@@ -1515,16 +1141,231 @@ function loadEmployment() {
                 <span class="info-row-value">${parseFloat(employeeData.transport_allowance || 0).toFixed(2)} SAR</span>
             </div>
             <div class="info-row">
-                <span class="info-row-label" data-lang="en">CTC</span>
-                <span class="info-row-label" data-lang="ar">التكلفة الإجمالية</span>
-                <span class="info-row-value" style="color: var(--primary-color); font-weight: 700;">${parseFloat(employeeData.ctc || 0).toFixed(2)} SAR</span>
+                <span class="info-row-label" data-lang="en">Total (CTC)</span>
+                <span class="info-row-label" data-lang="ar">الإجمالي</span>
+                <span class="info-row-value" style="color: var(--primary-color);">${parseFloat(employeeData.ctc || 0).toFixed(2)} SAR</span>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-card-title">
+                <i class="fas fa-address-card"></i>
+                <span data-lang="en">Contact Information</span>
+                <span data-lang="ar">معلومات الاتصال</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Mobile</span>
+                <span class="info-row-label" data-lang="ar">الجوال</span>
+                <span class="info-row-value">${employeeData.cell_number || '-'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Company Email</span>
+                <span class="info-row-label" data-lang="ar">البريد الإلكتروني</span>
+                <span class="info-row-value">${employeeData.company_email || '-'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-row-label" data-lang="en">Personal Email</span>
+                <span class="info-row-label" data-lang="ar">البريد الشخصي</span>
+                <span class="info-row-value">${employeeData.personal_email || '-'}</span>
             </div>
         </div>
     `;
-    
-    document.getElementById('employmentLoading').style.display = 'none';
-    document.getElementById('employmentContent').style.display = 'block';
     applyLanguage(currentLang);
+}
+
+// Load Employee Documents (Attachments, Iqama, Job Offer, etc.)
+function loadDocuments() {
+    if (!employeeNo) return;
+    
+    frappe.call({
+        method: 'frappe.client.get_list',
+        args: {
+            doctype: 'File',
+            filters: {
+                attached_to_doctype: 'Employee',
+                attached_to_name: employeeNo
+            },
+            fields: ['name', 'file_name', 'file_url', 'creation', 'file_size'],
+            limit_page_length: 9999
+        },
+        callback: function(r) {
+            const files = r.message || [];
+            displayDocuments(files);
+        }
+    });
+}
+
+function displayDocuments(files) {
+    const grid = document.getElementById('documentsGrid');
+    
+    if (files.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <i class="fas fa-folder-open"></i>
+                <p data-lang="en">No documents found</p>
+                <p data-lang="ar">لا توجد مستندات</p>
+            </div>
+        `;
+    } else {
+        grid.innerHTML = files.map(file => {
+            const fileType = file.file_name.split('.').pop().toLowerCase();
+            let icon = 'fa-file';
+            if (['pdf'].includes(fileType)) icon = 'fa-file-pdf';
+            else if (['jpg', 'jpeg', 'png'].includes(fileType)) icon = 'fa-file-image';
+            else if (['doc', 'docx'].includes(fileType)) icon = 'fa-file-word';
+            
+            return `
+                <div class="document-card" onclick="window.open('${file.file_url}', '_blank')">
+                    <div class="document-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="document-name">${file.file_name}</div>
+                    <div class="document-meta">
+                        ${new Date(file.creation).toLocaleDateString()}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    document.getElementById('documentsLoading').style.display = 'none';
+    document.getElementById('documentsContent').style.display = 'block';
+    applyLanguage(currentLang);
+}
+
+// Load Loans
+function loadLoans() {
+    if (!employeeNo) return;
+    
+    frappe.call({
+        method: 'frappe.client.get_list',
+        args: {
+            doctype: 'Loan',
+            filters: {
+                applicant: employeeNo,
+                status: ['in', ['Disbursed', 'Loan Closure Requested']]
+            },
+            fields: ['name', 'loan_type', 'loan_amount', 'total_payment', 'total_amount_paid', 'monthly_repayment_amount', 'status'],
+            limit_page_length: 9999
+        },
+        callback: function(r) {
+            const loans = r.message || [];
+            displayLoans(loans);
+        }
+    });
+}
+
+function displayLoans(loans) {
+    const container = document.getElementById('loansList');
+    
+    if (loans.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-hand-holding-usd"></i>
+                <p data-lang="en">No active loans or advances</p>
+                <p data-lang="ar">لا توجد قروض أو سلف نشطة</p>
+            </div>
+        `;
+    } else {
+        container.innerHTML = loans.map(loan => {
+            const pendingAmount = (parseFloat(loan.total_payment) || 0) - (parseFloat(loan.total_amount_paid) || 0);
+            
+            return `
+                <div class="loan-card">
+                    <div class="loan-header">
+                        <div class="loan-type">${loan.loan_type || 'N/A'}</div>
+                        <div class="loan-status disbursed">Active</div>
+                    </div>
+                    <div class="loan-details">
+                        <div class="loan-detail-item">
+                            <div class="loan-detail-label" data-lang="en">Loan Amount</div>
+                            <div class="loan-detail-label" data-lang="ar">مبلغ القرض</div>
+                            <div class="loan-detail-value">${parseFloat(loan.loan_amount || 0).toFixed(2)} SAR</div>
+                        </div>
+                        <div class="loan-detail-item">
+                            <div class="loan-detail-label" data-lang="en">Monthly</div>
+                            <div class="loan-detail-label" data-lang="ar">شهري</div>
+                            <div class="loan-detail-value">${parseFloat(loan.monthly_repayment_amount || 0).toFixed(2)} SAR</div>
+                        </div>
+                        <div class="loan-detail-item">
+                            <div class="loan-detail-label" data-lang="en">Pending</div>
+                            <div class="loan-detail-label" data-lang="ar">المتبقي</div>
+                            <div class="loan-detail-value">${pendingAmount.toFixed(2)} SAR</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    document.getElementById('loansLoading').style.display = 'none';
+    document.getElementById('loansContent').style.display = 'block';
+    applyLanguage(currentLang);
+}
+
+// Change Password Function
+function changePassword() {
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const messageDiv = document.getElementById('passwordMessage');
+    
+    // Clear previous messages
+    messageDiv.style.display = 'none';
+    
+    // Validation
+    if (!oldPassword || !newPassword || !confirmPassword) {
+        showPasswordMessage('Please fill all fields', 'error');
+        return;
+    }
+    
+    if (newPassword.length < 6) {
+        showPasswordMessage('New password must be at least 6 characters', 'error');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showPasswordMessage('New passwords do not match', 'error');
+        return;
+    }
+    
+    // Call Frappe API to change password
+    frappe.call({
+        method: 'frappe.core.doctype.user.user.update_password',
+        args: {
+            old_password: oldPassword,
+            new_password: newPassword
+        },
+        callback: function(r) {
+            if (r.message) {
+                showPasswordMessage('Password changed successfully!', 'success');
+                // Clear form
+                document.getElementById('oldPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            }
+        },
+        error: function(err) {
+            console.error('Password change error:', err);
+            showPasswordMessage('Error: ' + (err.message || 'Old password is incorrect'), 'error');
+        }
+    });
+}
+
+function showPasswordMessage(message, type) {
+    const messageDiv = document.getElementById('passwordMessage');
+    messageDiv.style.display = 'block';
+    messageDiv.textContent = message;
+    
+    if (type === 'success') {
+        messageDiv.style.background = 'rgba(16, 185, 129, 0.15)';
+        messageDiv.style.color = 'var(--success-color)';
+        messageDiv.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+    } else {
+        messageDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+        messageDiv.style.color = 'var(--error-color)';
+        messageDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+    }
 }
 
 // Initialize
@@ -1537,4 +1378,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
