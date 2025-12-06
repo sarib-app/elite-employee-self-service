@@ -1,0 +1,57 @@
+// ============================================
+// ADD THIS CODE AT THE END OF request_for_payment.js
+// (After the update_linked_records function, at the very end of the file)
+// ============================================
+
+// List View Filter: Hide verified=False records for users without "Proj Coordinator" role
+// This working solution uses filter_area.add() and overrides get_filters_for_args
+frappe.listview_settings['Request For Payment'] = {
+    onload: function(listview) {
+        // Check if user has "Proj Coordinator" role
+        const hasProjCoordinatorRole = frappe.user_roles.includes('Proj Coordinator');
+        
+        if (!hasProjCoordinatorRole) {
+            // For users WITHOUT Proj Coordinator role
+            // Force filter to EXCLUDE verified = False records
+            listview.filter_area.add([
+                ['Request For Payment', 'verified', '!=', 'False']
+            ]);
+            
+            // Override the filter to prevent manual changes
+            const original_get_filters = listview.get_filters_for_args;
+            listview.get_filters_for_args = function() {
+                let filters = original_get_filters.call(this);
+                
+                // Always add verified != False filter
+                const hasVerifiedFilter = filters.some(f => 
+                    f[1] === 'verified' && f[2] === '!=' && f[3] === 'False'
+                );
+                
+                if (!hasVerifiedFilter) {
+                    filters.push(['Request For Payment', 'verified', '!=', 'False']);
+                }
+                
+                // Remove any filter trying to show ONLY False records
+                filters = filters.filter(f => {
+                    if (f[1] === 'verified' && f[2] === '=' && (f[3] === 'False' || f[3] === 'false' || f[3] === 'FALSE')) {
+                        return false; // Remove this filter
+                    }
+                    return true;
+                });
+                
+                return filters;
+            };
+        }
+    },
+    
+    get_indicator: function(doc) {
+        if (doc.verified === "True") {
+            return [__("Verified"), "green", "verified,=,True"];
+        } else if (doc.verified === "False") {
+            return [__("Unverified"), "red", "verified,=,False"];
+        } else {
+            return [__("Pending Verification"), "orange", "verified,=,"];
+        }
+    }
+};
+
