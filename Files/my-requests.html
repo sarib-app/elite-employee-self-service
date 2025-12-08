@@ -205,6 +205,46 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .filters-toggle {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--text-secondary);
+        transition: transform 0.3s;
+    }
+    
+    .filters-section.collapsed .filters-toggle {
+        transform: rotate(-90deg);
+    }
+    
+    .filters-content {
+        overflow: hidden;
+        transition: max-height 0.3s ease, margin-bottom 0.3s ease;
+        max-height: 2000px;
+    }
+    
+    .filters-section.collapsed .filters-content {
+        max-height: 0;
+        margin-bottom: 0;
+        padding: 0;
+    }
+    
+    @media (min-width: 769px) {
+        .filters-title {
+            cursor: default;
+        }
+        
+        .filters-toggle {
+            display: none;
+        }
+        
+        .filters-section.collapsed .filters-content {
+            max-height: 2000px;
+            margin-bottom: 16px;
+        }
     }
     
     .filters-grid {
@@ -489,30 +529,171 @@
         display: none;
     }
     
+    /* Mobile Table - Show only essential columns */
+    .mobile-table-view {
+        display: none;
+    }
+    
+    .mobile-table-row {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .mobile-row-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    
+    .mobile-row-id {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: 13px;
+    }
+    
+    .mobile-row-status {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+    
+    .mobile-row-details {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+    
+    .mobile-row-detail-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+    }
+    
+    .mobile-row-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+    
+    .mobile-row-value {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .mobile-row-action {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border-color);
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .top-header {
-            flex-direction: column;
-            gap: 16px;
-            padding: 16px 20px;
+            padding: 8px 12px;
+            gap: 8px;
+        }
+        
+        .header-left {
+            gap: 8px;
+        }
+        
+        .back-button {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+        
+        .page-title-section h1 {
+            font-size: 14px;
+        }
+        
+        .page-title-section p {
+            font-size: 10px;
+        }
+        
+        .theme-toggle {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+        
+        .lang-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+        
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            font-size: 12px;
         }
         
         .main-container {
-            padding: 0 16px;
-            margin: 16px auto;
+            padding: 12px;
+        }
+        
+        .filters-section {
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .filters-title {
+            font-size: 13px;
+            margin-bottom: 12px;
         }
         
         .filters-grid {
             grid-template-columns: 1fr;
+            gap: 12px;
         }
         
-        .requests-table {
+        .filter-group {
+            gap: 4px;
+        }
+        
+        .filter-label {
+            font-size: 11px;
+        }
+        
+        .filter-input,
+        .filter-select {
+            padding: 6px 10px;
             font-size: 12px;
         }
         
-        .requests-table th,
-        .requests-table td {
-            padding: 10px 8px;
+        .btn-filter {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .requests-section {
+            border-radius: 8px;
+        }
+        
+        .section-header {
+            padding: 12px 16px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+        }
+        
+        /* Hide desktop table, show mobile view */
+        .requests-table-container {
+            display: none;
+        }
+        
+        .mobile-table-view {
+            display: block;
+            padding: 12px;
+        }
+        
+        .requests-table {
+            display: none;
         }
     }
     
@@ -564,12 +745,14 @@
     <!-- Main Container -->
     <div class="main-container">
         <!-- Filters Section -->
-        <div class="filters-section">
-            <div class="filters-title">
+        <div class="filters-section" id="filtersSection">
+            <div class="filters-title" onclick="toggleFilters()">
                 <i class="fas fa-filter"></i>
                 <span data-en="Filters" data-ar="مرشحات">Filters</span>
+                <i class="fas fa-chevron-down filters-toggle" id="filtersToggle"></i>
             </div>
-            <div class="filters-grid">
+            <div class="filters-content" id="filtersContent">
+                <div class="filters-grid">
                 <div class="filter-group">
                     <label class="filter-label" data-en="Expense Type" data-ar="نوع النفقات">Expense Type</label>
                     <select class="filter-select" id="filterExpenseType">
@@ -611,6 +794,7 @@
                         <span data-en="Clear" data-ar="مسح">Clear</span>
                     </button>
                 </div>
+                </div>
             </div>
         </div>
 
@@ -627,6 +811,7 @@
                 </div>
             </div>
             
+            <!-- Desktop Table View -->
             <div id="requestsTableContainer">
                 <table class="requests-table">
                     <thead>
@@ -653,6 +838,16 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Mobile Table View -->
+            <div class="mobile-table-view" id="mobileTableView">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="empty-state-title" data-en="Loading requests..." data-ar="جاري تحميل الطلبات...">Loading requests...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -702,6 +897,24 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 // Check authentication on page load
 document.addEventListener('DOMContentLoaded', function() {
     checkAuthentication();
+    
+    // Auto-collapse filters on mobile
+    if (window.innerWidth <= 768) {
+        const filtersSection = document.getElementById('filtersSection');
+        if (filtersSection) {
+            filtersSection.classList.add('collapsed');
+        }
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            const filtersSection = document.getElementById('filtersSection');
+            if (filtersSection && !filtersSection.classList.contains('collapsed')) {
+                filtersSection.classList.add('collapsed');
+            }
+        }
+    });
 });
 
 function checkAuthentication() {
@@ -1011,24 +1224,26 @@ function fetchRequestsInBatches(employeeNo, requests, background = false) {
 
 function displayRequests() {
     const tbody = document.getElementById('requestsTableBody');
+    const mobileView = document.getElementById('mobileTableView');
     const countElement = document.getElementById('requestsCount');
+    const isMobile = window.innerWidth <= 768;
     
     if (filteredRequests.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="7" style="text-align: center; padding: 40px;">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-inbox"></i>
-                        </div>
-                        <div class="empty-state-title" data-en="No requests found" data-ar="لا توجد طلبات">No requests found</div>
-                        <div class="empty-state-text" data-en="You haven't submitted any requests yet" data-ar="لم تقم بتقديم أي طلبات بعد">You haven't submitted any requests yet</div>
-                    </div>
-                </td>
-            </tr>
+        const emptyStateHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <div class="empty-state-title" data-en="No requests found" data-ar="لا توجد طلبات">No requests found</div>
+                <div class="empty-state-text" data-en="You haven't submitted any requests yet" data-ar="لم تقم بتقديم أي طلبات بعد">You haven't submitted any requests yet</div>
+            </div>
         `;
+        
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px;">${emptyStateHTML}</td></tr>`;
+        if (mobileView) mobileView.innerHTML = emptyStateHTML;
         countElement.textContent = currentLang === 'ar' ? '0 طلب' : '0 requests';
     } else {
+        // Desktop table view
         tbody.innerHTML = filteredRequests.map(request => {
             const expenseTypeClass = request.expense_type === 'Employee Advance' 
                 ? 'expense-type-advance' 
@@ -1067,6 +1282,59 @@ function displayRequests() {
             `;
         }).join('');
         
+        // Mobile card view - only show ID, Type, Status, Action
+        if (mobileView) {
+            mobileView.innerHTML = filteredRequests.map(request => {
+                const expenseTypeClass = request.expense_type === 'Employee Advance' 
+                    ? 'expense-type-advance' 
+                    : 'expense-type-operational';
+                
+                const statusClass = getStatusClass(request.workflow_state);
+                let formattedDate = '-';
+                if (request.date) {
+                    try {
+                        formattedDate = new Date(request.date).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        });
+                    } catch (e) {
+                        formattedDate = request.date;
+                    }
+                }
+                const formattedAmount = request.total_amount ? parseFloat(request.total_amount).toFixed(2) : '0.00';
+                
+                return `
+                    <div class="mobile-table-row">
+                        <div class="mobile-row-header">
+                            <span class="mobile-row-id">${request.name}</span>
+                            <span class="mobile-row-status status-badge ${statusClass}">${request.workflow_state || 'Draft'}</span>
+                        </div>
+                        <div class="mobile-row-details">
+                            <div class="mobile-row-detail-item">
+                                <span class="mobile-row-label" data-en="Type" data-ar="النوع">Type:</span>
+                                <span class="mobile-row-value expense-type-badge ${expenseTypeClass}">${request.expense_type || 'N/A'}</span>
+                            </div>
+                            <div class="mobile-row-detail-item">
+                                <span class="mobile-row-label" data-en="Date" data-ar="التاريخ">Date:</span>
+                                <span class="mobile-row-value">${formattedDate}</span>
+                            </div>
+                            <div class="mobile-row-detail-item">
+                                <span class="mobile-row-label" data-en="Amount" data-ar="المبلغ">Amount:</span>
+                                <span class="mobile-row-value">${formattedAmount} SAR</span>
+                            </div>
+                        </div>
+                        <div class="mobile-row-action">
+                            <button class="btn-view" onclick="viewRequest('${request.name}')" style="width: 100%;">
+                                <i class="fas fa-eye"></i>
+                                <span data-en="View Details" data-ar="عرض التفاصيل">View Details</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
         const countText = filteredRequests.length === 1 
             ? (currentLang === 'ar' ? 'طلب واحد' : '1 request')
             : (currentLang === 'ar' ? `${filteredRequests.length} طلبات` : `${filteredRequests.length} requests`);
@@ -1074,6 +1342,14 @@ function displayRequests() {
     }
     
     applyLanguage(currentLang);
+}
+
+// Toggle filters on mobile
+function toggleFilters() {
+    const filtersSection = document.getElementById('filtersSection');
+    if (filtersSection) {
+        filtersSection.classList.toggle('collapsed');
+    }
 }
 
 function getStatusClass(status) {
