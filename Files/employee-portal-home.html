@@ -6,23 +6,23 @@
         display: none !important;
     }
     
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
     
     /* Unified Color System - Light Mode (Default) */
-    :root {
+            :root {
         --primary-color: #084887;
         --primary-dark: #063a6b;
         --primary-light: #0a5ba8;
-        --text-primary: #0f172a;
-        --text-secondary: #64748b;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f8fafc;
+                --text-primary: #0f172a;
+                --text-secondary: #64748b;
+                --bg-primary: #ffffff;
+                --bg-secondary: #f8fafc;
         --bg-tertiary: #f1f5f9;
-        --border-color: #e2e8f0;
+                --border-color: #e2e8f0;
         --success-color: #10b981;
         --error-color: #ef4444;
         --warning-color: #f59e0b;
@@ -42,16 +42,16 @@
         --success-color: #10b981;
         --error-color: #ef4444;
         --warning-color: #f59e0b;
-    }
+            }
     
-    body {
-        font-family: 'Inter', sans-serif;
-        background: var(--bg-secondary);
-        min-height: 100vh;
-        padding: 0;
-        padding-top: 0 !important;
+            body {
+                font-family: 'Inter', sans-serif;
+                background: var(--bg-secondary);
+                min-height: 100vh;
+                padding: 0;
+                padding-top: 0 !important;
         transition: background 0.3s ease;
-    }
+            }
     
             body.rtl {
                 font-family: 'Cairo', sans-serif;
@@ -564,8 +564,8 @@
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
                 <div class="lang-switcher">
-                    <button class="lang-btn active" onclick="switchLanguage('en')">English</button>
-                    <button class="lang-btn" onclick="switchLanguage('ar')">العربية</button>
+                    <button class="lang-btn active">English</button>
+                    <button class="lang-btn">العربية</button>
                 </div>
                 
                 <div class="notifications">
@@ -773,6 +773,39 @@
                 </a>
             </div>
     
+            <!-- Portal Forms Section -->
+            <div class="section-header">
+                <h3><i class="fas fa-file-contract"></i> <span id="portalFormsTitle" data-en="Portal Forms" data-ar="نماذج البوابة">Portal Forms</span></h3>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Submit Portal Form -->
+                <a href="/employee-portal-form" class="service-card card-pink">
+                    <div class="service-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h4 id="submitPortalForm" data-en="Submit Portal Form" data-ar="تقديم نموذج بوابة">Submit Portal Form</h4>
+                    <p id="submitPortalFormDesc" data-en="Download, fill, and upload signed forms for verification" data-ar="قم بتنزيل وملء ورفع النماذج الموقّعة للتحقق">Download, fill, and upload signed forms for verification</p>
+                    <span class="service-arrow">
+                        <span id="viewMorePortal1" data-en="Submit form" data-ar="تقديم النموذج">Submit form</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+    
+                <!-- All Portal Forms -->
+                <a href="/employee-portal-form-list" class="service-card card-purple">
+                    <div class="service-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <h4 id="allPortalForms" data-en="All Portal Forms" data-ar="جميع نماذج البوابة">All Portal Forms</h4>
+                    <p id="allPortalFormsDesc" data-en="View all your submitted portal forms and verification status" data-ar="عرض جميع نماذج البوابة المقدمة وحالة التحقق">View all your submitted portal forms and verification status</p>
+                    <span class="service-arrow">
+                        <span id="viewMorePortal2" data-en="View forms" data-ar="عرض النماذج">View forms</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+    
             <!-- HR Services Section -->
             <div class="section-header">
                 <h3><i class="fas fa-id-card"></i> <span id="hrServicesTitle">HR Services</span></h3>
@@ -813,7 +846,7 @@
                     <h4 id="flightTickets">Flight Tickets</h4>
                     <p id="flightTicketsDesc">Request flight tickets for business or vacation</p>
                     <span class="service-arrow">
-                        <span id="viewMore7">View requests</span>
+                        <span id="viewMore7">Book now</span>
                         <i class="fas fa-arrow-right"></i>
                     </span>
                 </a>
@@ -954,12 +987,12 @@
                         if (r.message && r.message !== 'Guest') {
                             currentUser = r.message;
                             loadEmployeeData();
-                        } else {
-                            window.location.href = '/employee-login';
-                        }
+                    } else {
+                        window.location.href = '/employee-login';
+                    }
                     },
                     error: function() {
-                        window.location.href = '/employee-login';
+                    window.location.href = '/employee-login';
                     }
                 });
             }
@@ -1134,7 +1167,7 @@
                     }
                 });
             }
-            
+    
             function setupUserInfo(user) {
                 // Get user initials for avatar
                 const fullName = user.full_name || user.email;
@@ -1207,7 +1240,14 @@
                     viewMore7: "Book now",
                     viewMore8: "Request leave",
                     viewMore9: "Edit profile",
-                    viewMore10: "Get help"
+                    viewMore10: "Get help",
+                    portalFormsTitle: "Portal Forms",
+                    submitPortalForm: "Submit Portal Form",
+                    submitPortalFormDesc: "Download, fill, and upload signed forms for verification",
+                    allPortalForms: "All Portal Forms",
+                    allPortalFormsDesc: "View all your submitted portal forms and verification status",
+                    viewMorePortal1: "Submit form",
+                    viewMorePortal2: "View forms"
                 },
                 ar: {
                     portalTitle: "بوابة موظفي مجموعة مدارس الرياض",
@@ -1259,7 +1299,14 @@
                     viewMore7: "احجز الآن",
                     viewMore8: "طلب إجازة",
                     viewMore9: "تعديل الملف الشخصي",
-                    viewMore10: "احصل على المساعدة"
+                    viewMore10: "احصل على المساعدة",
+                    portalFormsTitle: "نماذج البوابة",
+                    submitPortalForm: "تقديم نموذج بوابة",
+                    submitPortalFormDesc: "قم بتنزيل وملء ورفع النماذج الموقّعة للتحقق",
+                    allPortalForms: "جميع نماذج البوابة",
+                    allPortalFormsDesc: "عرض جميع نماذج البوابة المقدمة وحالة التحقق",
+                    viewMorePortal1: "تقديم النموذج",
+                    viewMorePortal2: "عرض النماذج"
                 }
             };
     
@@ -1301,11 +1348,28 @@
                 }
                 html.setAttribute('lang', lang);
                 
-                // Update all text content
+                // Update all text content from data attributes
                 document.querySelectorAll('[data-' + lang + ']').forEach(element => {
                     const text = element.getAttribute('data-' + lang);
+                    if (text) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.value = text;
+                        } else {
                     element.textContent = text;
+                        }
+                    }
                 });
+                
+                // Update elements by ID using translations object
+                if (translations[lang]) {
+                    const trans = translations[lang];
+                    Object.keys(trans).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            element.textContent = trans[key];
+                        }
+                    });
+                }
             }
     
             // Logout functionality
