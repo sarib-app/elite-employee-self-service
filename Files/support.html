@@ -292,6 +292,102 @@
         font-size: 12px;
     }
     
+    /* Video Tutorial Section */
+    .video-tutorials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .video-tutorial-card {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+    
+    .video-tutorial-card:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(8, 72, 135, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .video-thumbnail {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .video-thumbnail::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        border-left: 20px solid var(--primary-color);
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        z-index: 2;
+    }
+    
+    .video-thumbnail::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        opacity: 0.1;
+    }
+    
+    .video-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+        line-height: 1.4;
+    }
+    
+    .video-description {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+    
+    .video-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 12px;
+        text-decoration: none;
+    }
+    
+    .video-link:hover {
+        color: var(--primary-dark);
+    }
+    
+    .video-link i {
+        font-size: 14px;
+    }
+    
     /* FAQ Section */
     .faq-item {
         margin-bottom: 16px;
@@ -697,6 +793,87 @@
                 </a>
             </li>
         </ol>
+    </div>
+
+    <!-- Video Tutorials Section -->
+    <div class="help-section">
+        <div class="help-section-title">
+            <i class="fas fa-video"></i>
+            <span data-en="Video Tutorials" data-ar="دروس الفيديو">Video Tutorials</span>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;" data-en="Watch step-by-step video tutorials to learn how to use the employee portal" data-ar="شاهد دروس الفيديو خطوة بخطوة لتعلم كيفية استخدام بوابة الموظفين">Watch step-by-step video tutorials to learn how to use the employee portal</p>
+        
+        <div class="video-tutorials-grid">
+            <a href="https://youtu.be/7tewVFCtDE0" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="How to Submit Request" data-ar="كيفية تقديم طلب">How to Submit Request</div>
+                <div class="video-description" data-en="Learn how to submit payment requests in the employee portal" data-ar="تعلم كيفية تقديم طلبات الدفع في بوابة الموظفين">Learn how to submit payment requests in the employee portal</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/J-JsqLwJE8Q" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="View Pending Requests" data-ar="عرض الطلبات المعلقة">View Pending Requests</div>
+                <div class="video-description" data-en="Learn how to view and track your pending requests" data-ar="تعلم كيفية عرض وتتبع طلباتك المعلقة">Learn how to view and track your pending requests</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/QoNjbhXv5yw" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="Submit General Request" data-ar="تقديم طلب عام">Submit General Request</div>
+                <div class="video-description" data-en="Learn how to submit general service requests" data-ar="تعلم كيفية تقديم طلبات الخدمة العامة">Learn how to submit general service requests</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/4mKfgRv-t7g" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="View Submitted Requests" data-ar="عرض الطلبات المقدمة">View Submitted Requests</div>
+                <div class="video-description" data-en="Learn how to view all your submitted general requests" data-ar="تعلم كيفية عرض جميع طلباتك العامة المقدمة">Learn how to view all your submitted general requests</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/KzB6MCReAWo" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="Submit Form into Employee Portal" data-ar="تقديم نموذج في بوابة الموظفين">Submit Form into Employee Portal</div>
+                <div class="video-description" data-en="Learn how to download, fill, and submit portal forms" data-ar="تعلم كيفية تنزيل وملء وتقديم نماذج البوابة">Learn how to download, fill, and submit portal forms</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/7QPxgsdylK4" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="View Submitted Forms" data-ar="عرض النماذج المقدمة">View Submitted Forms</div>
+                <div class="video-description" data-en="Learn how to view all your submitted portal forms" data-ar="تعلم كيفية عرض جميع نماذج البوابة المقدمة">Learn how to view all your submitted portal forms</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+            
+            <a href="https://youtu.be/kJTCgW5PKa0" target="_blank" class="video-tutorial-card">
+                <div class="video-thumbnail"></div>
+                <div class="video-title" data-en="Upload and View Attendance" data-ar="رفع وعرض الحضور">Upload and View Attendance</div>
+                <div class="video-description" data-en="Learn how to upload attendance files and view them" data-ar="تعلم كيفية رفع ملفات الحضور وعرضها">Learn how to upload attendance files and view them</div>
+                <div class="video-link">
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </a>
+        </div>
     </div>
 
     <!-- FAQ Section -->

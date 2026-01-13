@@ -535,9 +535,24 @@
         border-radius: 8px;
         font-size: 14px;
         font-family: inherit;
-        color: var(--text-primary);
-        background: var(--bg-primary);
+        color: var(--text-primary) !important;
+        background: var(--bg-primary) !important;
         transition: all 0.2s;
+    }
+    
+    /* Ensure inputs in dark mode have proper contrast */
+    [data-theme="dark"] .form-input,
+    [data-theme="dark"] .form-select,
+    [data-theme="dark"] .form-textarea {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* Fix for inputs inside cards */
+    [data-theme="dark"] .card-body input,
+    [data-theme="dark"] .card-body select {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
     }
     
     .form-input:focus,
@@ -847,12 +862,20 @@
         width: 100%;
     }
     
+    /* Fix for searchable select input fields in dark mode */
+    [data-theme="dark"] .searchable-select input,
+    [data-theme="dark"] .card-body .searchable-select input {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
     .card-body .dropdown-list {
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
-        background: var(--bg-primary);
+        background: var(--bg-primary) !important;
         border: 1px solid var(--border-color);
         border-top: none;
         border-radius: 0 0 8px 8px;
@@ -860,6 +883,29 @@
         overflow-y: auto;
         z-index: 1000;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Dark mode specific fixes for card dropdowns */
+    [data-theme="dark"] .card-body .dropdown-list {
+        background: var(--bg-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .card-body .dropdown-item {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .card-body .dropdown-item:hover {
+        background: var(--bg-secondary) !important;
+    }
+    
+    [data-theme="dark"] .card-body .dropdown-item strong {
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .card-body .dropdown-item small {
+        color: var(--text-secondary) !important;
     }
     
     /* Form Container Shadow */
@@ -988,6 +1034,17 @@
     
     .searchable-select input[type="text"] {
         width: 100%;
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    /* Dark mode fix for searchable select inputs */
+    [data-theme="dark"] .searchable-select input[type="text"],
+    [data-theme="dark"] .searchable-select input {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
     }
     
     .dropdown-list {
@@ -1009,7 +1066,9 @@
         padding: 10px 12px;
         cursor: pointer;
         transition: background 0.2s;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
     
     .dropdown-item:last-child {
@@ -1021,13 +1080,29 @@
     }
     
     .dropdown-item strong {
-        color: var(--text-primary);
+        color: var(--text-primary) !important;
         font-size: 14px;
     }
     
     .dropdown-item small {
-        color: var(--text-secondary);
+        color: var(--text-secondary) !important;
         font-size: 12px;
+    }
+    
+    /* Ensure dropdown list has proper dark mode styling */
+    [data-theme="dark"] .dropdown-list {
+        background: var(--bg-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .dropdown-item {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        border-bottom-color: var(--border-color) !important;
+    }
+    
+    [data-theme="dark"] .dropdown-item:hover {
+        background: var(--bg-secondary) !important;
     }
     
     .table-btn {
@@ -1311,6 +1386,17 @@
     
         <!-- Form Container -->
         <div class="form-container">
+            <!-- Video Tutorial Link -->
+            <div style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-video" style="color: var(--primary-color); font-size: 18px;"></i>
+                    <span style="font-size: 13px; color: var(--text-secondary);" data-en="Need help? Watch how to submit a request" data-ar="تحتاج مساعدة؟ شاهد كيفية تقديم طلب">Need help? Watch how to submit a request</span>
+                </div>
+                <a href="https://youtu.be/7tewVFCtDE0" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--primary-color); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary-color)'">
+                    <i class="fas fa-play"></i>
+                    <span data-en="Watch Video" data-ar="شاهد الفيديو">Watch Video</span>
+                </a>
+            </div>
             <form id="requestForm" class="form-card">
                 <!-- Form Header -->
                 <div class="form-header">
