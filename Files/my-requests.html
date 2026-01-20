@@ -1379,39 +1379,112 @@ function applyURLFilters() {
     const urlParams = new URLSearchParams(window.location.search);
     const statusParam = urlParams.get('status');
     const itemParam = urlParams.get('item');
-    
+
+    console.log('Applying URL filters - Status param:', statusParam);
+    console.log('Total requests before filtering:', allRequests.length);
+
     if (statusParam) {
-        // Set the status filter dropdown
+        // Decode URL parameter (handles %20 for spaces)
+        const decodedStatus = decodeURIComponent(statusParam);
+        console.log('Decoded status parameter:', decodedStatus);
+
+        // Special handling for "In Progress" filter
+        if (decodedStatus.toLowerCase() === 'in progress') {
+            console.log('Filtering for In Progress requests (workflow_state != Draft AND != Approved by FM)');
+            // "In Progress" means: NOT "Draft" AND NOT "Approved by FM"
+            filteredRequests = allRequests.filter(request => {
+                const requestStatus = (request.workflow_state || '').toLowerCase();
+                console.log(`Request ${request.name}: workflow_state = "${request.workflow_state}"`);
+
+                // Exclude Draft
+                if (requestStatus === 'draft' || requestStatus === '') {
+                    return false;
+                }
+
+                // Exclude Approved by FM
+                if (requestStatus === 'approved by fm') {
+                    return false;
+                }
+
+                // Include everything else (Approved by HR MGR, Pending for FM Approval, Rejected, etc.)
+                return true;
+            });
+
+            console.log('Filtered requests count (In Progress):', filteredRequests.length);
+            // Don't set dropdown for "In Progress" as it's not a real status option
+            return; // Exit early since we've already filtered
+        }
+
+        // Handle "Draft" filter - exact match for Draft status
+        if (decodedStatus.toLowerCase() === 'draft') {
+            console.log('Filtering for Draft requests (workflow_state == Draft or empty)');
+            filteredRequests = allRequests.filter(request => {
+                const requestStatus = (request.workflow_state || '').toLowerCase();
+                console.log(`Request ${request.name}: workflow_state = "${request.workflow_state}"`);
+                return requestStatus === 'draft' || requestStatus === '';
+            });
+
+            console.log('Filtered requests count (Draft):', filteredRequests.length);
+            // Set dropdown to Draft
+            const statusSelect = document.getElementById('filterStatus');
+            if (statusSelect) {
+                statusSelect.value = 'Draft';
+            }
+            return; // Exit early
+        }
+
+        // Handle "Approved by FM" filter - exact match for Approved by FM status
+        if (decodedStatus.toLowerCase() === 'approved by fm') {
+            console.log('Filtering for Approved by FM requests (workflow_state == "Approved by FM")');
+            filteredRequests = allRequests.filter(request => {
+                const requestStatus = (request.workflow_state || '').toLowerCase();
+                console.log(`Request ${request.name}: workflow_state = "${request.workflow_state}"`);
+                return requestStatus === 'approved by fm';
+            });
+
+            console.log('Filtered requests count (Approved by FM):', filteredRequests.length);
+            // Set dropdown to Approved by FM
+            const statusSelect = document.getElementById('filterStatus');
+            if (statusSelect) {
+                statusSelect.value = 'Approved by FM';
+            }
+            return; // Exit early
+        }
+
+        // For all other status filters, use exact matching
+        console.log('Filtering for exact match with workflow_state:', decodedStatus);
+        filteredRequests = allRequests.filter(request => {
+            const requestStatus = (request.workflow_state || '').toLowerCase();
+            const filterStatus = decodedStatus.toLowerCase();
+            console.log(`Request ${request.name}: workflow_state = "${request.workflow_state}"`);
+
+            // Exact match (case-insensitive)
+            return requestStatus === filterStatus;
+        });
+
+        console.log('Filtered requests count (exact match):', filteredRequests.length);
+
+        // Set the status filter dropdown for regular status filters
         const statusSelect = document.getElementById('filterStatus');
         if (statusSelect) {
-            // Try to find matching option
+            // Try to find exact match first
+            let foundMatch = false;
             const options = statusSelect.options;
             for (let i = 0; i < options.length; i++) {
-                if (options[i].value.toLowerCase().includes(statusParam.toLowerCase()) || 
-                    statusParam.toLowerCase().includes(options[i].value.toLowerCase())) {
+                if (options[i].value.toLowerCase() === decodedStatus.toLowerCase()) {
                     statusSelect.value = options[i].value;
+                    foundMatch = true;
                     break;
                 }
             }
-            // If no exact match, set the value directly (for custom statuses)
-            if (!statusSelect.value || statusSelect.value === '') {
-                statusSelect.value = statusParam;
-            }
         }
-        
-        // Apply the filter
-        filteredRequests = allRequests.filter(request => {
-            const requestStatus = (request.workflow_state || '').toLowerCase();
-            const filterStatus = statusParam.toLowerCase();
-            // For exact matches like "Draft", check exact match
-            if (filterStatus === 'draft') {
-                return requestStatus === 'draft' || requestStatus.includes('draft');
-            }
-            // For statuses like "Approved by HR MGR", check if request status contains the filter
-            return requestStatus.includes(filterStatus);
-        });
+    } else {
+        // No status parameter - show all requests
+        console.log('No status filter - showing all requests');
+        filteredRequests = [...allRequests];
+        console.log('Total requests (no filter):', filteredRequests.length);
     }
-    
+
     // If item filter is present, we need to fetch full request details to check items
     if (itemParam) {
         filterByItem(itemParam);
@@ -1579,10 +1652,32 @@ function applyFilters() {
     filteredRequests = allRequests.filter(request => {
         if (expenseType && request.expense_type !== expenseType) return false;
         if (status) {
-            // Match status exactly or if it contains the filter value
-            const requestStatus = (request.workflow_state || '').toLowerCase();
-            const filterStatus = status.toLowerCase();
-            if (!requestStatus.includes(filterStatus)) return false;
+            const requestStatus = request.workflow_state || '';
+            const filterStatus = status;
+            
+            // Exact match (case-insensitive)
+            if (requestStatus.toLowerCase() === filterStatus.toLowerCase()) {
+                // Status matches, continue to other filters
+            } else {
+                // For "Draft" status, check exact match
+                if (filterStatus.toLowerCase() === 'draft') {
+                    if (requestStatus.toLowerCase() !== 'draft') return false;
+                }
+                // For "Approved by FM", check exact match
+                else if (filterStatus.toLowerCase() === 'approved by fm') {
+                    if (requestStatus.toLowerCase() !== 'approved by fm') return false;
+                }
+                // For other statuses, check if request status contains the filter or vice versa
+                else {
+                    const normalizedRequestStatus = requestStatus.toLowerCase().replace(/\s+/g, ' ').trim();
+                    const normalizedFilterStatus = filterStatus.toLowerCase().replace(/\s+/g, ' ').trim();
+                    
+                    if (!normalizedRequestStatus.includes(normalizedFilterStatus) && 
+                        !normalizedFilterStatus.includes(normalizedRequestStatus)) {
+                        return false;
+                    }
+                }
+            }
         }
         if (fromDate && request.date && request.date < fromDate) return false;
         if (toDate && request.date && request.date > toDate) return false;

@@ -1463,17 +1463,20 @@
     
                     <!-- Step 2: Request Type -->
                     <div class="step-content" id="step2">
-                        <!-- Expense Type Selection -->
+                        <!-- Expense Type Selection (Hidden - Always set to Advance) -->
                         <div class="form-section">
                         <div class="section-title">
                             <i class="fas fa-receipt section-icon"></i>
                             <span data-en="Expense Type" data-ar="نوع النفقات">Expense Type</span>
                         </div>
-                        <div class="expense-type-radio">
-                            <input type="checkbox" id="isAdvance" />
-                            <label for="isAdvance" data-en="Deduct from salary (Loan/Advance)" data-ar="خصم من الراتب (قرض/سلفة)">Deduct from salary (Loan/Advance)</label>
+                        <div style="padding: 16px; background: var(--bg-secondary); border-radius: 8px; border: 2px solid var(--primary-color);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-check-circle" style="color: var(--primary-color); font-size: 20px;"></i>
+                                <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);" data-en="Deduct from salary (Loan/Advance)" data-ar="خصم من الراتب (قرض/سلفة)">Deduct from salary (Loan/Advance)</span>
+                            </div>
                         </div>
-                        <input type="hidden" id="expenseType" value="Operational Expense" />
+                        <input type="checkbox" id="isAdvance" checked style="display: none;" />
+                        <input type="hidden" id="expenseType" value="Employee Advance" />
                         </div>
                     </div>
     
@@ -1773,10 +1776,10 @@
         
         // Setup file upload for multiple files
         setupFileUpload();
-        
-        // Add first item card by default
+
+        // Add first advance card by default (since we're always in Employee Advance mode)
         setTimeout(() => {
-            addItemCard();
+            addAdvanceCard();
             // Initialize step navigation
             showStep(1);
         }, 500);
@@ -1853,13 +1856,16 @@
             method: 'frappe.client.get_list',
             args: {
                 doctype: 'Loan Type',
-                fields: ['name'],
+                fields: ['name', 'show_in_portal'],
+                filters: {
+                    show_in_portal: 'True'  // Only load loan types where show_in_portal is True
+                },
                 limit_page_length: 9999
             },
             callback: function(r) {
                 if (r.message) {
                     loanTypesList = r.message;
-                    console.log('Loaded loan types:', loanTypesList.length);
+                    console.log('Loaded loan types (show_in_portal=True):', loanTypesList.length);
                 }
             }
         });
@@ -1970,30 +1976,40 @@
         document.getElementById('loadingOverlay').classList.add('hidden');
         document.getElementById('mainContent').classList.remove('hidden');
         applyLanguage(currentLang);
+
+        // Always set to Employee Advance mode
+        document.getElementById('isAdvance').checked = true;
+        document.getElementById('expenseType').value = 'Employee Advance';
+        document.getElementById('itemsSection').classList.add('hidden');
+        document.getElementById('advancesSection').classList.remove('hidden');
     }
     
-    // Expense Type Toggle
+    // Expense Type Toggle - Disabled (Always Employee Advance)
+    // The checkbox is always checked and hidden, so this event listener is not needed
+    // Keeping it commented out for reference
+    /*
     document.getElementById('isAdvance').addEventListener('change', function() {
         const isAdvance = this.checked;
         const expenseType = isAdvance ? 'Employee Advance' : 'Operational Expense';
         document.getElementById('expenseType').value = expenseType;
-        
+
         if (isAdvance) {
             document.getElementById('itemsSection').classList.add('hidden');
             document.getElementById('advancesSection').classList.remove('hidden');
-            
+
             if (document.getElementById('advancesCardsContainer').children.length === 0) {
                 addAdvanceCard();
             }
         } else {
             document.getElementById('itemsSection').classList.remove('hidden');
             document.getElementById('advancesSection').classList.add('hidden');
-            
+
             if (document.getElementById('itemsCardsContainer').children.length === 0) {
                 addItemCard();
             }
         }
     });
+    */
     
     // Items Card Functions
     let itemCardCounter = 0;
@@ -2155,7 +2171,12 @@
         const card = document.createElement('div');
         card.className = 'advance-card';
         card.id = 'advance-card-' + advanceCardCounter;
-        
+
+        // Calculate first day of next month for repayment start date
+        const today = new Date();
+        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        const defaultRepaymentDate = nextMonth.toISOString().split('T')[0];
+
         card.innerHTML = `
             <div class="card-header">
                 <div class="card-title">
@@ -2180,32 +2201,32 @@
                         <input type="hidden" class="advance-type" />
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">
                         <span data-en="Advance Amount (SAR)" data-ar="مبلغ السلفة (ريال)">Advance Amount (SAR)</span>
                         <span class="required-mark">*</span>
                     </label>
-                    <input type="number" class="form-input advance-amount" placeholder="0.00" step="0.01" min="0" required />
+                    <input type="number" class="form-input advance-amount" value="35" placeholder="35.00" step="0.01" min="0" required />
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label" data-en="Monthly Repayment (SAR)" data-ar="الدفع الشهري (ريال)">Monthly Repayment (SAR)</label>
-                    <input type="number" class="form-input monthly-repay" placeholder="0.00" step="0.01" min="0" />
+                    <input type="number" class="form-input monthly-repay" value="35" placeholder="35.00" step="0.01" min="0" />
                 </div>
-                
+
                 <div class="form-group full-width">
                     <label class="form-label" data-en="Repayment Start Date" data-ar="تاريخ بداية السداد">Repayment Start Date</label>
-                    <input type="date" class="form-input repayment-start" />
+                    <input type="date" class="form-input repayment-start" value="${defaultRepaymentDate}" />
                 </div>
-                
+
                 <div class="form-group full-width">
                     <label class="form-label" data-en="Remarks / Notes" data-ar="ملاحظات / ملاحظات">Remarks / Notes</label>
                     <textarea class="form-textarea adv-remarks" rows="2" placeholder="Add any additional notes here..."></textarea>
                 </div>
             </div>
         `;
-        
+
         container.appendChild(card);
         applyLanguage(currentLang);
     }

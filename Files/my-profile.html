@@ -1326,6 +1326,9 @@ function populateEmployeeDetails() {
         </div>
     `;
     applyLanguage(currentLang);
+
+    // Check for URL parameters after profile is fully loaded
+    checkURLParameters();
 }
 
 // Load Employee Documents (Attachments, Iqama, Job Offer, etc.)
@@ -1672,13 +1675,53 @@ function showPasswordMessage(message, type) {
     }
 }
 
+// Check for URL parameters and switch to appropriate tab
+function checkURLParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+
+    if (tabParam) {
+        console.log('Tab parameter found:', tabParam);
+
+        // Map tab parameter to tab name and button index
+        let tabName = '';
+        let buttonIndex = -1;
+
+        if (tabParam === 'loans') {
+            tabName = 'loans';
+            buttonIndex = 2; // Third button (0-indexed)
+        } else if (tabParam === 'salary-slips') {
+            tabName = 'salary-slips';
+            buttonIndex = 3; // Fourth button (0-indexed)
+        }
+
+        if (tabName && buttonIndex >= 0) {
+            console.log('Switching to tab:', tabName, 'at button index:', buttonIndex);
+
+            // Get all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            console.log('Total tab buttons found:', tabButtons.length);
+
+            if (tabButtons[buttonIndex]) {
+                console.log('Button element found, calling switchTab');
+                // Switch to the requested tab immediately
+                switchTab(tabName, tabButtons[buttonIndex]);
+            } else {
+                console.error('Button at index', buttonIndex, 'not found');
+            }
+        }
+    }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     checkAuthentication();
     applyLanguage(currentLang);
-    
+
     if (currentLang === 'ar') {
         document.body.classList.add('rtl');
     }
+
+    // URL parameters are checked in populateEmployeeDetails() after data is loaded
 });
 </script>

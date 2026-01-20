@@ -658,6 +658,25 @@
     
         <!-- Main Services -->
         <div class="main-content">
+            <!-- Portal Guide Section -->
+            <div class="section-header">
+                <h3><i class="fas fa-book-open"></i> <span id="portalGuideTitle" data-en="Portal Guide" data-ar="دليل البوابة">Portal Guide</span></h3>
+            </div>
+
+            <div class="services-grid" style="margin-bottom: 40px;">
+                <a href="https://erpeliteresourcesco.frappe.cloud/files/Portal%20Booklist.pdf" target="_blank" class="service-card card-purple">
+                    <div class="service-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4 id="portalGuideCardTitle" data-en="Portal User Guide" data-ar="دليل مستخدم البوابة">Portal User Guide</h4>
+                    <p id="portalGuideCardDesc" data-en="Learn how to use the portal effectively with our comprehensive guide" data-ar="تعلم كيفية استخدام البوابة بفعالية من خلال دليلنا الشامل">Learn how to use the portal effectively with our comprehensive guide</p>
+                    <span class="service-arrow">
+                        <span id="viewGuideText" data-en="View Guide" data-ar="عرض الدليل">View Guide</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
             <div class="section-header">
                 <h3><i class="fas fa-briefcase"></i> <span id="servicesTitle">Core Services</span></h3>
             </div>
@@ -703,7 +722,7 @@
                 </a>
     
                 <!-- In Progress Requests -->
-                <a href="/my-requests?status=Approved by HR MGR" class="service-card card-purple">
+                <a href="/my-requests?status=In Progress" class="service-card card-purple">
                     <div class="service-icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
@@ -711,6 +730,19 @@
                     <p id="myRecordsDesc">View requests that are currently in progress</p>
                     <span class="service-arrow">
                         <span id="viewMore4">View requests</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+
+                <!-- Approved Requests -->
+                <a href="/my-requests?status=Approved by FM" class="service-card card-green">
+                    <div class="service-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 id="approvedRequestsTitle" data-en="Approved Requests" data-ar="الطلبات المعتمدة">Approved Requests</h4>
+                    <p id="approvedRequestsDesc" data-en="View requests that have been approved by FM" data-ar="عرض الطلبات التي تمت الموافقة عليها من قبل المدير المالي">View requests that have been approved by FM</p>
+                    <span class="service-arrow">
+                        <span id="viewMore5" data-en="View approved" data-ar="عرض المعتمدة">View approved</span>
                         <i class="fas fa-arrow-right"></i>
                     </span>
                 </a>
@@ -867,34 +899,29 @@
             </div>
             
             <div class="quick-actions-grid">
-                <a href="/documents" class="quick-action">
-                    <i class="fas fa-folder-open" style="color: #667eea;"></i>
-                    <span id="myDocuments">My Documents</span>
+                <a href="https://erpeliteresourcesco.frappe.cloud/files/Portal%20Booklist.pdf" target="_blank" class="quick-action">
+                    <i class="fas fa-book-open" style="color: #9333ea;"></i>
+                    <span id="portalGuide">Portal Guide</span>
                 </a>
-    
-                <a href="/payslips" class="quick-action">
+
+                <a href="/my-profile?tab=loans" class="quick-action">
+                    <i class="fas fa-hand-holding-usd" style="color: #667eea;"></i>
+                    <span id="myLoans">My Loans</span>
+                </a>
+
+                <a href="/my-profile?tab=salary-slips" class="quick-action">
                     <i class="fas fa-file-invoice-dollar" style="color: #20e3b2;"></i>
                     <span id="payslips">Payslips</span>
                 </a>
-    
-                <a href="/certificates" class="quick-action">
-                    <i class="fas fa-certificate" style="color: #f5576c;"></i>
-                    <span id="certificates">Certificates</span>
-                </a>
-    
-                <a href="/attendance" class="quick-action">
+
+                <a href="/attendance-file-form" class="quick-action">
                     <i class="fas fa-clock" style="color: #00f2fe;"></i>
                     <span id="attendance">Attendance</span>
                 </a>
-    
-                <a href="/announcements" class="quick-action">
-                    <i class="fas fa-bullhorn" style="color: #fcb69f;"></i>
-                    <span id="announcements">Announcements</span>
-                </a>
-    
-                <a href="/policies" class="quick-action">
-                    <i class="fas fa-book" style="color: #80d0c7;"></i>
-                    <span id="policies">HR Policies</span>
+
+                <a href="/support" class="quick-action">
+                    <i class="fas fa-headset" style="color: #f5576c;"></i>
+                    <span id="getHelp">Get Help</span>
                 </a>
             </div>
     
@@ -1071,13 +1098,19 @@
                                         
                                         if (isEmployeeRequest) {
                                             totalCount++;
-                                            const status = (doc.workflow_state || '').toLowerCase();
+                                            const workflowState = doc.workflow_state || '';
+                                            const status = workflowState.toLowerCase();
                                             
-                                            if (status.includes('approved by fm')) {
+                                            // Completed: Workflow State == "Approved by FM"
+                                            if (workflowState === 'Approved by FM' || status === 'approved by fm') {
                                                 completedCount++;
-                                            } else if (status === 'draft' || status.includes('draft')) {
+                                            } 
+                                            // Pending: Workflow State === "draft"
+                                            else if (workflowState === 'Draft' || workflowState === 'draft' || status === 'draft') {
                                                 pendingCount++;
-                                            } else if (status.includes('approved by hr mgr')) {
+                                            } 
+                                            // In Progress: Workflow State != "draft" AND != "Approved by FM"
+                                            else if (workflowState && workflowState !== 'Draft' && workflowState !== 'draft' && workflowState !== 'Approved by FM' && workflowState !== 'approved by fm') {
                                                 inProgressCount++;
                                             }
                                         }
@@ -1190,23 +1223,26 @@
                     pendingRequestsDesc: "Track requests awaiting approval or processing",
                     myRecords: "In Progress Requests",
                     myRecordsDesc: "View requests that are currently in progress",
+                    approvedRequestsTitle: "Approved Requests",
+                    approvedRequestsDesc: "View requests that have been approved by FM",
                     personalTitle: "Personal & Support",
                     profileTitle: "My Profile",
                     profileDesc: "Manage your personal information and settings",
                     supportHelp: "Support & Help",
                     supportHelpDesc: "Get assistance and contact HR department",
                     quickActionsTitle: "Quick Actions",
-                    myDocuments: "My Documents",
+                    myLoans: "My Loans",
                     payslips: "Payslips",
-                    certificates: "Certificates",
                     attendance: "Attendance",
-                    announcements: "Announcements",
-                    policies: "HR Policies",
+                    getHelp: "Get Help",
+                    cocRequest: "COC",
+                    loanRequest: "Loan Request",
+                    portalGuide: "Portal Guide",
                     viewMore1: "Learn more",
                     viewMore2: "View details",
                     viewMore3: "Check status",
                     viewMore4: "View requests",
-                    viewMore5: "Apply now",
+                    viewMore5: "View approved",
                     viewMore6: "View requests",
                     viewMore7: "Book now",
                     viewMore8: "Request leave",
@@ -1240,23 +1276,26 @@
                     pendingRequestsDesc: "تتبع الطلبات في انتظار الموافقة أو المعالجة",
                     myRecords: "الطلبات قيد التنفيذ",
                     myRecordsDesc: "عرض الطلبات التي قيد التنفيذ حالياً",
+                    approvedRequestsTitle: "الطلبات المعتمدة",
+                    approvedRequestsDesc: "عرض الطلبات التي تمت الموافقة عليها من قبل المدير المالي",
                     personalTitle: "الشخصية والدعم",
                     profileTitle: "ملفي الشخصي",
                     profileDesc: "إدارة معلوماتك الشخصية والإعدادات",
                     supportHelp: "الدعم والمساعدة",
                     supportHelpDesc: "احصل على المساعدة واتصل بقسم الموارد البشرية",
                     quickActionsTitle: "إجراءات سريعة",
-                    myDocuments: "مستنداتي",
+                    myLoans: "قروضي",
                     payslips: "قسائم الرواتب",
-                    certificates: "الشهادات",
                     attendance: "الحضور",
-                    announcements: "الإعلانات",
-                    policies: "سياسات الموارد البشرية",
+                    getHelp: "احصل على المساعدة",
+                    cocRequest: "شهادة الخبرة",
+                    loanRequest: "طلب قرض",
+                    portalGuide: "دليل البوابة",
                     viewMore1: "اعرف المزيد",
                     viewMore2: "عرض التفاصيل",
                     viewMore3: "تحقق من الحالة",
-                    viewMore4: "عرض التحليلات",
-                    viewMore5: "قدم الآن",
+                    viewMore4: "عرض الطلبات",
+                    viewMore5: "عرض المعتمدة",
                     viewMore6: "عرض الطلبات",
                     viewMore7: "احجز الآن",
                     viewMore8: "طلب إجازة",
