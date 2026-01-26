@@ -565,7 +565,7 @@
                     <span data-en="Request Type" data-ar="نوع الطلب">Request Type</span>
                     <span class="required-mark">*</span>
                 </label>
-                <select class="form-select" id="requestType" required>
+                <select class="form-select" id="requestType" required onchange="fetchRequestTypeDescription(this.value)">
                     <option value="">-- Select Request Type --</option>
                     <option value="Salary Slip">Salary Slip</option>
                     <option value="Embassy Form">Embassy Form</option>
@@ -580,6 +580,7 @@
                     <option value="Salary Increment Letter">Salary Increment Letter</option>
                     <option value="Salary Letter">Salary Letter</option>
                 </select>
+                <div id="requestTypeDescription" style="display: none; margin-top: 8px; padding: 10px 12px; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--primary-color); font-size: 12px; color: var(--text-secondary); line-height: 1.5;"></div>
             </div>
             
             <!-- Details -->
@@ -712,14 +713,49 @@
     function populateEmployeeFields() {
         document.getElementById('employee').value = employeeData?.name || '';
         document.getElementById('employeeName').value = employeeData?.employee_name || '';
-        
+
         const nameParts = (employeeData?.employee_name || '').split(' ');
-        const initials = nameParts.length >= 2 
+        const initials = nameParts.length >= 2
             ? (nameParts[0][0] + nameParts[1][0]).toUpperCase()
             : (employeeData?.employee_name || 'U').substring(0, 2).toUpperCase();
         document.getElementById('userAvatar').textContent = initials;
     }
-    
+
+    // Static Request Type descriptions
+    function fetchRequestTypeDescription(requestTypeName) {
+        const descriptionDiv = document.getElementById('requestTypeDescription');
+
+        if (!requestTypeName) {
+            descriptionDiv.style.display = 'none';
+            return;
+        }
+
+        // Static descriptions mapping
+        const descriptions = {
+            'Salary Slip': 'Document showing an employee\'s earnings, deductions, and net pay for a pay period.',
+            'Embassy Form': 'Official document required by a foreign embassy for visa applications, attestation, or other consular services. The form is prepared and issued by the employer or HR department and is subject to management and HR approval.',
+            'Employment Letter': 'Official document issued by the employer confirming an individual\'s employment with the organization.',
+            'End of Contract Notification': 'Official communication issued to inform an employee of the upcoming end of their employment contract. Subject to management and HR approval.',
+            'ERC Assets Receiving': 'Acknowledgment of company assets received by an employee, subject to approval.',
+            'Experience Letter': 'Document confirming an employee\'s tenure, role, and responsibilities, subject to approval.',
+            'Indebtedness Letter': 'Document confirming an employee\'s outstanding financial obligations to the company, subject to approval.',
+            'Letter for Extend of Probation': 'Official notice extending an employee\'s probation period, subject to approval.',
+            'Passport Office Authorization': 'Employer-issued authorization for passport-related procedures, subject to approval.',
+            'Salary Certificate': 'Official document confirming an employee\'s salary details, subject to approval.',
+            'Salary Increment Letter': 'Official notice of an employee\'s approved salary increase, subject to approval.',
+            'Salary Letter': 'Official document issued by the employer confirming an employee\'s salary details for a specific period. It typically includes basic salary, allowances, and other benefits, and is used for official purposes such as banking, visa, or loan applications. It is subject to management and HR approval.'
+        };
+
+        const description = descriptions[requestTypeName] || '';
+
+        if (description) {
+            descriptionDiv.innerHTML = '<strong style="color: var(--text-primary);">' + (currentLang === 'ar' ? 'الوصف:' : 'Description:') + '</strong> ' + description;
+            descriptionDiv.style.display = 'block';
+        } else {
+            descriptionDiv.style.display = 'none';
+        }
+    }
+
     // Theme Toggle
     function initializeTheme() {
         const themeToggle = document.getElementById('themeToggle');

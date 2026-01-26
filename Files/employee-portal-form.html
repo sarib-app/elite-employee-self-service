@@ -657,6 +657,7 @@
                     <option value="Vacation Request Form">Vacation Request Form</option>
                     <option value="Visa Reimbursement Form">Visa Reimbursement Form</option>
                 </select>
+                <div id="formTypeDescription" style="display: none; margin-top: 8px; padding: 10px 12px; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--primary-color); font-size: 12px; color: var(--text-secondary); line-height: 1.5;"></div>
             </div>
             
             <!-- Download Section -->
@@ -877,27 +878,46 @@ function handleFormTypeChange() {
     const uploadSection = document.getElementById('uploadSection');
     const downloadBtn = document.getElementById('downloadBtn');
     const downloadMessage = document.getElementById('downloadMessage');
-    
+    const descriptionDiv = document.getElementById('formTypeDescription');
+
+    // Static Form Type descriptions
+    const formDescriptions = {
+        'Health Declaration Form': 'Document that employees are required to complete to provide their personal health information. This form is necessary to enroll the employee in the company\'s health insurance plan and is subject to management and HR approval.',
+        'Istiqdam Form': 'Official document required for sponsoring family members for a permanent residence visa or a family visit visa. Employees must complete this form to initiate the visa sponsorship process, and it is subject to management and HR approval.',
+        'Reimbursement Form': 'Official document that employees submit to request repayment for approved business or work-related expenses incurred out-of-pocket. The form must include supporting receipts and documentation and is subject to management and HR approval.',
+        'Vacation Request Form': 'Official document that employees submit to request leave or vacation days. The form specifies the requested dates and duration and is subject to management and HR approval.',
+        'Visa Reimbursement Form': 'Official document for the repayment of expenses incurred by an employee for obtaining a visa required for employment, travel, or work-related purposes.'
+    };
+
     if (formType) {
         // Show download section
         downloadSection.style.display = 'block';
         filledBtnSection.style.display = 'block';
-        
+
         // Hide upload section
         uploadSection.classList.remove('show');
-        
+
         // Set download URL
         const downloadUrl = formDownloadUrls[formType];
         if (downloadUrl) {
             downloadBtn.href = downloadUrl;
         }
-        
+
         // Set message
-        const message = currentLang === 'ar' 
+        const message = currentLang === 'ar'
             ? `قم بتنزيل "${formType}" من هنا، املأه وارفعه للتحقق من قبل المسؤول. شكراً لك.`
             : `Download the "${formType}" from here, fill it up and upload it for admin's verification. Thank you.`;
         downloadMessage.textContent = message;
-        
+
+        // Show form type description
+        const description = formDescriptions[formType] || '';
+        if (description) {
+            descriptionDiv.innerHTML = '<strong style="color: var(--text-primary);">' + (currentLang === 'ar' ? 'الوصف:' : 'Description:') + '</strong> ' + description;
+            descriptionDiv.style.display = 'block';
+        } else {
+            descriptionDiv.style.display = 'none';
+        }
+
         // Reset uploaded file
         uploadedFile = null;
         document.getElementById('uploadedFile').innerHTML = '';
@@ -905,6 +925,7 @@ function handleFormTypeChange() {
         downloadSection.style.display = 'none';
         filledBtnSection.style.display = 'none';
         uploadSection.classList.remove('show');
+        descriptionDiv.style.display = 'none';
     }
 }
 
